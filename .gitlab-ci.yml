@@ -1,0 +1,54 @@
+image: openjdk:8
+
+variables:
+  PROJECTNAME: "Util"
+
+before_script:
+  - java -version
+  - ls -l
+
+stages:
+  - compile
+  - status
+  - javadoc
+  
+pending:
+  allow_failure: true
+  script:
+    - curl ${SERVER}ci/status.sh | bash -s ${PROJECTNAME} ${CI_COMMIT_SHA} pending
+  stage: compile
+
+success:
+  allow_failure: true
+  script:
+    - curl ${SERVER}ci/status.sh | bash -s ${PROJECTNAME} ${CI_COMMIT_SHA} success
+  when: on_success
+  stage: status
+
+failure:
+  allow_failure: true
+  script:
+    - curl ${SERVER}ci/status.sh | bash -s ${PROJECTNAME} ${CI_COMMIT_SHA} failure
+  when: on_failure
+  stage: status
+
+verify:
+  allow_failure: true
+  script: curl ${SERVER}ci/javadoc.sh | bash
+  stage: javadoc
+
+javadoc:
+  script:
+    - cd ${PROJECTNAME}
+    - find src -name "*.java" > sources.txt
+    - javadoc -private @sources.txt
+  stage: javadoc
+
+compile:
+  script:
+    - chmod -R 755 ./*
+    - cd ${PROJECTNAME}
+    - curl ${SERVER}ci/compile.sh | bash -s ${PROJECTNAME} src
+    - mv ${PROJECTNAME}.jar ../
+  stage: compile
+  environment: builds
