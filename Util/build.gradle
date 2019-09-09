@@ -42,8 +42,8 @@ publishing{
 					}
 				}
 				scm{
-					connection = 'scm:git:git@github.com:RoanH/KeysPerSecond.git'
-					developerConnection = 'scm:git:git@github.com:RoanH/KeysPerSecond.git'
+					connection = 'scm:git:git@github.com:RoanH/Util.git'
+					developerConnection = 'scm:git:git@github.com:RoanH/Util.git'
 					url = 'https://github.com/RoanH/Util'
 				}
 			}
