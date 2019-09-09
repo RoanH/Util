@@ -16,21 +16,46 @@ sourceSets{
 }
 
 group = 'me.roan'
-version = '1.0.0'
+version = '1.0-SNAPSHOT'
 
 publishing{
 	publications{
-		GradleTest(MavenPublication){
+		nexus(MavenPublication){
+			artifactId = 'util'
 			from components.java
+			
+			pom{
+				name = 'Util'
+				description = 'Utilities library for public projects'
+				url = 'https://github.com/RoanH/Util'
+				licenses{
+					license{
+						name = 'GNU General Public License v3.0'
+						url = 'http://www.gnu.org/licenses/gpl-3.0.txt'
+					}
+				}
+				developers{
+					developer{
+						id = 'RoanH'
+						name = 'Roan Hofland'
+						email = 'roan.hofland@hotmail.com'
+					}
+				}
+				scm{
+					connection = 'scm:git:git@github.com:RoanH/KeysPerSecond.git'
+					developerConnection = 'scm:git:git@github.com:RoanH/KeysPerSecond.git'
+					url = 'https://github.com/RoanH/Util'
+				}
+			}
 		}
 	}
 	
 	repositories{
 		maven{
-			url "http://192.168.2.24:8081/repository/maven-releases/"
+			url version.endsWith('SNAPSHOT') ? "$nexusSnapshots" : "$nexusReleases"
 			credentials{
-				username "admin"
-				password "snip"
+				username "$mavenUser"
+				password "$mavenPassword"
 			}
 		}
 	}
