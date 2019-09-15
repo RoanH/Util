@@ -22,44 +22,46 @@ sourceCompatibility = 1.8
 group = 'me.roan'
 version = '1.0-SNAPSHOT'
 
-publishing{
-	publications{
-		nexus(MavenPublication){
-			artifactId = 'util'
-			from components.java
+if(project.hasProperty("mavenPassword")){
+	publishing{
+		publications{
+			nexus(MavenPublication){
+				artifactId = 'util'
+				from components.java
 			
-			pom{
-				name = 'Util'
-				description = 'Utilities library for public projects'
-				url = 'https://github.com/RoanH/Util'
-				licenses{
-					license{
-						name = 'GNU General Public License v3.0'
-						url = 'http://www.gnu.org/licenses/gpl-3.0.txt'
-					}
-				}
-				developers{
-					developer{
-						id = 'RoanH'
-						name = 'Roan Hofland'
-						email = 'roan.hofland@hotmail.com'
-					}
-				}
-				scm{
-					connection = 'scm:git:git@github.com:RoanH/Util.git'
-					developerConnection = 'scm:git:git@github.com:RoanH/Util.git'
+				pom{
+					name = 'Util'
+					description = 'Utilities library for public projects'
 					url = 'https://github.com/RoanH/Util'
+					licenses{
+						license{
+							name = 'GNU General Public License v3.0'
+							url = 'http://www.gnu.org/licenses/gpl-3.0.txt'
+						}
+					}
+					developers{
+						developer{
+							id = 'RoanH'
+							name = 'Roan Hofland'
+							email = 'roan.hofland@hotmail.com'
+						}
+					}
+					scm{
+						connection = 'scm:git:git@github.com:RoanH/Util.git'
+						developerConnection = 'scm:git:git@github.com:RoanH/Util.git'
+						url = 'https://github.com/RoanH/Util'
+					}
 				}
 			}
 		}
-	}
 	
-	repositories{
-		maven{
-			url version.endsWith('SNAPSHOT') ? "$nexusSnapshots" : "$nexusReleases"
-			credentials{
-				username "$mavenUser"
-				password "$mavenPassword"
+		repositories{
+			maven{
+				url version.endsWith('SNAPSHOT') ? "$nexusSnapshots" : "$nexusReleases"
+				credentials{
+					username "$mavenUser"
+					password "$mavenPassword"
+				}
 			}
 		}
 	}
