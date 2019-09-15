@@ -44,7 +44,7 @@ javadoc:
   script:
     - mkdir ../javadoc
     - ./gradlew javadoc
-    - mv ./build/docs/javadoc ../javadoc
+    - mv ./build/docs/javadoc/* ../javadoc
   stage: javadoc
   environment: javadoc
   artifacts:
