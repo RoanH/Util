@@ -6,11 +6,15 @@ variables:
 before_script:
   - java -version
   - ls -l
+  - cd ${PROJECTNAME}
+  - chmod -R 755 ./*
+  - ./gradlew -g ./cache -PnexusSnapshots=${NEXUS_SNAPSHOTS} setupCIWorkspace
 
 stages:
   - compile
   - status
   - javadoc
+  - publish
   
 pending:
   allow_failure: true
@@ -39,21 +43,25 @@ verify:
 
 javadoc:
   script:
-    - cd ${PROJECTNAME}
-    - find src -name "*.java" > sources.txt
-    - javadoc -private @sources.txt
+    - mkdir ../javadoc
+    - ./gradlew javadoc
+    - mv ./build/docs/javadoc ../javadoc
   stage: javadoc
+  environment: javadoc
+  artifacts:
+    name: "$PROJECTNAME"
+    expire_in: 1 week
+    paths:
+      - javadoc/
 
 compile:
   script:
-    - chmod -R 755 ./*
-    - cd ${PROJECTNAME}
-    - curl ${SERVER}ci/compile.sh | bash -s ${PROJECTNAME} src
-    - mv ${PROJECTNAME}.jar ../
+    - ./gradlew jar
+    - mv ./build/libs/* ../
   stage: compile
   environment: builds
   artifacts:
     name: "${PROJECTNAME}"
     expire_in: 1 week
     paths:
-      - ${PROJECTNAME}.jar
+      - ${PROJECTNAME}-*.jar
