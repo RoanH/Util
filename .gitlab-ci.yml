@@ -11,6 +11,7 @@ stages:
   - compile
   - status
   - javadoc
+  - publish
   
 pending:
   allow_failure: true
@@ -39,21 +40,27 @@ verify:
 
 javadoc:
   script:
+    - mkdir javadoc
     - cd ${PROJECTNAME}
-    - find src -name "*.java" > sources.txt
-    - javadoc -private @sources.txt
+    - ./gradlew javadoc
+    - mv ./build/docs/javadoc ../javadoc
   stage: javadoc
+  environment: javadoc
+  artifacts:
+    name: "$PROJECTNAME"
+    expire_in: 1 week
+    paths:
+      - javadoc/
 
 compile:
   script:
-    - chmod -R 755 ./*
     - cd ${PROJECTNAME}
-    - curl ${SERVER}ci/compile.sh | bash -s ${PROJECTNAME} src
-    - mv ${PROJECTNAME}.jar ../
+    - ./gradlew jar
+    - mv ./build/libs/* ../
   stage: compile
   environment: builds
   artifacts:
     name: "${PROJECTNAME}"
     expire_in: 1 week
     paths:
-      - ${PROJECTNAME}.jar
+      - ${PROJECTNAME}-*.jar
