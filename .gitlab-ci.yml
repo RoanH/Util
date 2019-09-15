@@ -6,7 +6,9 @@ variables:
 before_script:
   - java -version
   - ls -l
+  - cd ${PROJECTNAME}
   - chmod -R 755 ./*
+  - ./gradlew -g ./cache setupCIWorkspace
 
 stages:
   - compile
@@ -41,8 +43,7 @@ verify:
 
 javadoc:
   script:
-    - mkdir javadoc
-    - cd ${PROJECTNAME}
+    - mkdir ../javadoc
     - ./gradlew javadoc
     - mv ./build/docs/javadoc ../javadoc
   stage: javadoc
@@ -55,7 +56,6 @@ javadoc:
 
 compile:
   script:
-    - cd ${PROJECTNAME}
     - ./gradlew jar
     - mv ./build/libs/* ../
   stage: compile
