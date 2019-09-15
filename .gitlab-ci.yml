@@ -6,6 +6,7 @@ variables:
 before_script:
   - java -version
   - ls -l
+  - chmod -R 755 ./*
 
 stages:
   - compile
