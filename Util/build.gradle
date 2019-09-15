@@ -9,10 +9,11 @@ sourceSets{
 		java{
 			srcDirs = ['src']
 		}
-		resources{
-			srcDirs = ['src']
-		}
 	}
+}
+
+javadoc{
+	options.memberLevel = JavadocMemberLevel.PRIVATE
 }
 
 compileJava.options.encoding = 'UTF-8'
