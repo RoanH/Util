@@ -8,7 +8,6 @@ before_script:
   - ls -l
   - cd ${PROJECTNAME}
   - chmod -R 755 ./*
-  - ./gradlew -g ./cache -PnexusSnapshots=${NEXUS_SNAPSHOTS} setupCIWorkspace
 
 stages:
   - compile
@@ -19,20 +18,20 @@ stages:
 pending:
   allow_failure: true
   script:
-    - curl ${SERVER}ci/status.sh | bash -s ${PROJECTNAME} ${CI_COMMIT_SHA} pending
+    - curl --request POST --form "status=pending" --form "repo=${PROJECTNAME}" --form "commit=${CI_COMMIT_SHA}" ${CISERVER}
   stage: compile
 
 success:
   allow_failure: true
   script:
-    - curl ${SERVER}ci/status.sh | bash -s ${PROJECTNAME} ${CI_COMMIT_SHA} success
+    - curl --request POST --form "status=success" --form "repo=${PROJECTNAME}" --form "commit=${CI_COMMIT_SHA}" ${CISERVER}
   when: on_success
   stage: status
 
 failure:
   allow_failure: true
   script:
-    - curl ${SERVER}ci/status.sh | bash -s ${PROJECTNAME} ${CI_COMMIT_SHA} failure
+    - curl --request POST --form "status=failure" --form "repo=${PROJECTNAME}" --form "commit=${CI_COMMIT_SHA}" ${CISERVER}
   when: on_failure
   stage: status
 
@@ -45,7 +44,7 @@ javadoc:
   script:
     - mkdir ../javadoc
     - ./gradlew javadoc
-    - mv ./build/docs/javadoc ../javadoc
+    - mv ./build/docs/javadoc/* ../javadoc
   stage: javadoc
   environment: javadoc
   artifacts:
