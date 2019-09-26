@@ -18,20 +18,20 @@ stages:
 pending:
   allow_failure: true
   script:
-    - curl --request POST --form "status=pending" --form "repo=${PROJECTNAME}" --form "commit=${CI_COMMIT_SHA}" ${CISERVER}
+    - curl --request POST --form "type=status" --form "status=pending" --form "repo=${PROJECTNAME}" --form "commit=${CI_COMMIT_SHA}" ${CISERVER}
   stage: compile
 
 success:
   allow_failure: true
   script:
-    - curl --request POST --form "status=success" --form "repo=${PROJECTNAME}" --form "commit=${CI_COMMIT_SHA}" ${CISERVER}
+    - curl --request POST --form "type=status" --form "status=success" --form "repo=${PROJECTNAME}" --form "commit=${CI_COMMIT_SHA}" ${CISERVER}
   when: on_success
   stage: status
 
 failure:
   allow_failure: true
   script:
-    - curl --request POST --form "status=failure" --form "repo=${PROJECTNAME}" --form "commit=${CI_COMMIT_SHA}" ${CISERVER}
+    - curl --request POST --form "type=status" --form "status=failure" --form "repo=${PROJECTNAME}" --form "commit=${CI_COMMIT_SHA}" ${CISERVER}
   when: on_failure
   stage: status
 
