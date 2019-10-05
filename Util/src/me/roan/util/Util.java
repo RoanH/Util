@@ -9,12 +9,18 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 public class Util{
+	private static final String VERSION_FORMAT_ITALICS = "<html><center><i>Version: %1$s, latest version: %2$s</i></center></html>";
+	private static final String VERSION_FORMAT = "<html><center>Version: %1$s, latest version: %2$s</center></html>";
 	
 	public static JLabel getVersionLabel(String repository, String currentVersion){
-		JLabel ver = new JLabel("<html><center><i>Version: " + currentVersion + ", latest version: <font color=gray>loading</font></i></center></html>", SwingConstants.CENTER);
+		return getVersionLabel(repository, currentVersion, true, SwingConstants.CENTER);
+	}
+	
+	public static JLabel getVersionLabel(String repository, String currentVersion, boolean italics, int alignment){
+		JLabel ver = new JLabel(String.format(italics ? VERSION_FORMAT_ITALICS : VERSION_FORMAT, currentVersion, "<i><font color=gray>loading</font></i>"), alignment);
 		new Thread(()->{
 			String version = checkVersion(repository);
-			ver.setText("<html><center><i>Version: " + currentVersion + ", latest version: " + (version == null ? "unknown :(" : version) + "</i></center></html>");
+			ver.setText(String.format(italics ? VERSION_FORMAT_ITALICS : VERSION_FORMAT, currentVersion, version == null ? "unknown :(" : version));
 		}, "Version Checker").start();
 		return ver;
 	}
