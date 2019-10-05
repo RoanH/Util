@@ -8,14 +8,50 @@ import java.net.URL;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
+/**
+ * Class with various utility subroutines.
+ * @author Roan
+ */
 public class Util{
+	/**
+	 * Version label format in italics.
+	 * @see #VERSION_FORMAT
+	 */
 	private static final String VERSION_FORMAT_ITALICS = "<html><center><i>Version: %1$s, latest version: %2$s</i></center></html>";
+	/**
+	 * Version label format.
+	 * @see #VERSION_FORMAT_ITALICS
+	 */
 	private static final String VERSION_FORMAT = "<html><center>Version: %1$s, latest version: %2$s</center></html>";
 	
+	/**
+	 * Gets a version label that automatically updates
+	 * with the latest version after some time. The
+	 * label text will be in italics and centered.
+	 * @param repository The repository to check the version for.
+	 * @param currentVersion The current version of the software.
+	 * @return An automatically updating label with the
+	 *         latest version.
+	 * @see SwingConstants
+	 * @see #getVersionLabel(String, String, boolean, int)
+	 */
 	public static JLabel getVersionLabel(String repository, String currentVersion){
 		return getVersionLabel(repository, currentVersion, true, SwingConstants.CENTER);
 	}
 	
+	/**
+	 * Gets a version label that automatically updates
+	 * with the latest version after some time.
+	 * @param repository The repository to check the version for.
+	 * @param currentVersion The current version of the software.
+	 * @param italics Whether or not to display the
+	 *        text in italics.
+	 * @param alignment The text alignment inside the label.
+	 * @return An automatically updating label with the
+	 *         latest version.
+	 * @see SwingConstants
+	 * @see #getVersionLabel(String, String)
+	 */
 	public static JLabel getVersionLabel(String repository, String currentVersion, boolean italics, int alignment){
 		JLabel ver = new JLabel(String.format(italics ? VERSION_FORMAT_ITALICS : VERSION_FORMAT, currentVersion, "<i><font color=gray>loading</font></i>"), alignment);
 		new Thread(()->{
