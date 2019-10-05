@@ -19,13 +19,13 @@ javadoc{
 compileJava.options.encoding = 'UTF-8'
 sourceCompatibility = 1.8
 
-group = 'me.roan'
+group = 'com.github.RoanH'
 version = '1.0-SNAPSHOT'
 
 publishing{
 	publications{
 		nexus(MavenPublication){
-			artifactId = 'util'
+			artifactId = 'Util'
 			from components.java
 		
 			pom{
