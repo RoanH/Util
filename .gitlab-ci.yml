@@ -2,6 +2,7 @@ image: openjdk:8
 
 variables:
   PROJECTNAME: "Util"
+  VERSION: ${CI_COMMIT_REF_NAME:1}
 
 before_script:
   - java -version
@@ -64,3 +65,10 @@ compile:
     expire_in: 1 week
     paths:
       - ${PROJECTNAME}-*.jar
+      
+publish:
+  script:
+    - ./gradlew -PnexusPublic=${NEXUS_PUBLIC} -PnexusReleases=${NEXUS_RELEASES} -PnexusSnapshots=${NEXUS_SNAPSHOTS} -PmavenUser=ci -PmavenPassword=${MAVEN_PASSWORD} publishAllPublicationsToMavenRepository
+  only: 
+    - tags
+  stage: publishing
