@@ -5,7 +5,19 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
+
 public class Util{
+	
+	public static JLabel getVersionLabel(String repository, String currentVersion){
+		JLabel ver = new JLabel("<html><center><i>Version: " + currentVersion + ", latest version: <font color=gray>loading</font></i></center></html>", SwingConstants.CENTER);
+		new Thread(()->{
+			String version = checkVersion(repository);
+			ver.setText("<html><center><i>Version: " + currentVersion + ", latest version: " + (version == null ? "unknown :(" : version) + "</i></center></html>");
+		}, "Version Checker").start();
+		return ver;
+	}
 	
 	/**
 	 * Checks the version to see
