@@ -2,5 +2,6 @@ jdk:
   - openjdk8
 install:
   - cd Util
+  - chmod -R 755 ./*
   - ./gradlew install
   - ./gradlew build publishToMavenLocal
