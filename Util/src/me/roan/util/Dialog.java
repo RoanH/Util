@@ -46,6 +46,17 @@ public class Dialog{
 	public static final boolean showOptionDialog(Object form){
 		return showOptionDialog(form, false);
 	}
+	
+	/**
+	 * Shows the given object to the user.
+	 * The dialog will have a 'OK' and
+	 * 'Cancel' close option.
+	 * @param form The object to display
+	 * @return True if the 'OK' option was selected
+	 */
+	public static final boolean showSelectDialog(Object form){
+		return showDialog(form, false, new String[]{"OK", "Cancel"});
+	}
 
 	/**
 	 * Poses the given object as a yes/no option
