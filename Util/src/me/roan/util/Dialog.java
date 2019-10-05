@@ -6,19 +6,45 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+/**
+ * Utility class for showing often
+ * used dialog windows.
+ * @author Roan
+ */
 public class Dialog{
+	/**
+	 * The parent frame for dialog windows.
+	 */
 	private static JFrame parentFrame = null;
+	/**
+	 * The window icon for dialog windows.
+	 */
 	private static Image icon = null;
+	/**
+	 * The window title for dialog windows.
+	 */
 	private static String title = "";
 	
+	/**
+	 * Sets the parent window for the dialog windows.
+	 * @param parent The parent window.
+	 */
 	public static final void setParentFrame(JFrame parent){
 		parentFrame = parent;
 	}
 	
+	/**
+	 * Sets the window icon for the dialog windows.
+	 * @param icon The dialog icon.
+	 */
 	public static final void setDialogIcon(Image icon){
 		Dialog.icon = icon;
 	}
 	
+	/**
+	 * Sets the window title for the dialog windows.
+	 * @param title The dialog title.
+	 */
 	public static final void setDialogTitle(String title){
 		Dialog.title = title;
 	}
@@ -115,6 +141,10 @@ public class Dialog{
 		return options[0].equals(optionPane.getValue());
 	}
 	
+	/**
+	 * Gets the parent frame for the dialog windows.
+	 * @return The parent frame for the dialog windows.
+	 */
 	private static final JFrame getParentFrame(){
 		return (parentFrame == null || !parentFrame.isVisible()) ? null : parentFrame;
 	}
