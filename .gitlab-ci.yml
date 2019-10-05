@@ -14,7 +14,7 @@ stages:
   - compile
   - status
   - javadoc
-  - publish
+  - publishing
   
 pending:
   allow_failure: true
