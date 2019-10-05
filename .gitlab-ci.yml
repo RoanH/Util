@@ -2,7 +2,7 @@ image: openjdk:8
 
 variables:
   PROJECTNAME: "Util"
-  VERSION: ${CI_COMMIT_REF_NAME:1}
+  VERSION: ${CI_COMMIT_REF_NAME}
 
 before_script:
   - java -version
