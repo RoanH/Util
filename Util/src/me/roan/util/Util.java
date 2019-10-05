@@ -77,7 +77,7 @@ public class Util{
 			String line = reader.readLine();
 			reader.close();
 			String[] versions = line.split("\"name\":\"v");
-			int max_main = 3;
+			int max_main = 1;
 			int max_sub = 0;
 			String[] tmp;
 			for(int i = 1; i < versions.length; i++){
