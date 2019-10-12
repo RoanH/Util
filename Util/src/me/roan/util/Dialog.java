@@ -58,8 +58,8 @@ public class Dialog{
 	 *        be able to resize the dialog
 	 * @return True if the 'Save' option was selected
 	 */
-	public static final boolean showOptionDialog(Object form, boolean resizable){
-		return showDialog(form, resizable, new String[]{"Save", "Cancel"});
+	public static final boolean showSaveDialog(Object form, boolean resizable){
+		return 0 == showDialog(form, resizable, new String[]{"Save", "Cancel"});
 	}
 
 	/**
@@ -69,8 +69,8 @@ public class Dialog{
 	 * @param form The object to display
 	 * @return True if the 'Save' option was selected
 	 */
-	public static final boolean showOptionDialog(Object form){
-		return showOptionDialog(form, false);
+	public static final boolean showSaveDialog(Object form){
+		return showSaveDialog(form, false);
 	}
 	
 	/**
@@ -81,7 +81,7 @@ public class Dialog{
 	 * @return True if the 'OK' option was selected
 	 */
 	public static final boolean showSelectDialog(Object form){
-		return showDialog(form, false, new String[]{"OK", "Cancel"});
+		return 0 == showDialog(form, false, new String[]{"OK", "Cancel"});
 	}
 
 	/**
@@ -91,7 +91,7 @@ public class Dialog{
 	 * @return True if the user selected yes
 	 */
 	public static final boolean showConfirmDialog(Object msg){
-		return showDialog(msg, false, new String[]{"Yes", "No"});
+		return 0 == showDialog(msg, false, new String[]{"Yes", "No"});
 	}
 
 	/**
@@ -119,26 +119,44 @@ public class Dialog{
 	public static final void showErrorDialog(String error){
 		showMessageDialog(error);
 	}
-
+	
 	/**
 	 * Shows the given object as a dialog
-	 * with the given close options
+	 * with the given close options.
+	 * @param form The dialog to display
+	 * @param options The close options
+	 *        for the dialog.
+	 * @return The index of the option that
+	 *         was chosen in the options array.
+	 */
+	public static final int showDialog(Object form, String[] options){
+		return showDialog(form, false, options);
+	}
+	
+	/**
+	 * Shows the given object as a dialog
+	 * with the given close options.
 	 * @param form The dialog to display
 	 * @param resizable Whether or not the
-	 *        dialog can be resized
+	 *        dialog can be resized.
 	 * @param options The close options
-	 *        for the dialog
-	 * @return True if the used close option
-	 *         is the first item in the close
-	 *         options list, false otherwise
+	 *        for the dialog.
+	 * @return The index of the option that
+	 *         was chosen in the options array.
 	 */
-	public static final boolean showDialog(Object form, boolean resizable, String[] options){
+	public static final int showDialog(Object form, boolean resizable, String[] options){
 		JOptionPane optionPane = new JOptionPane(form, JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, 0);
 		JDialog dialog = optionPane.createDialog(getParentFrame(), title);
 		dialog.setResizable(resizable);
 		dialog.setIconImage(icon);
 		dialog.setVisible(true);
-		return options[0].equals(optionPane.getValue());
+		
+		for(int i = 0; i < options.length; i++){
+			if(options[i].equals(optionPane.getValue())){
+				return i;
+			}
+		}
+		return -1;
 	}
 	
 	/**
