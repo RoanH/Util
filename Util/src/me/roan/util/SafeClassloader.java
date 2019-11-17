@@ -1,10 +1,17 @@
 package me.roan.util;
 
+import java.awt.Window.Type;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -52,7 +59,56 @@ public class SafeClassloader extends URLClassLoader{
 	public final Enumeration<URL> findResources(String name) throws IOException{
 		Enumeration<URL> res = super.findResources(name);
 		
-		System.out.println("Resources: " + res + " | name=" + name);
+		System.out.println("Attempting to find resource: " + name + " found: " + res + " type: " + res.getClass());
+		int c = 0;
+		while(res.hasMoreElements()){
+			System.out.println(c + " Resources: " + res.nextElement() + " | name=" + name);
+		}
+		
+		//TODO only if hasNext false on super call
+		//TODO for all proper error handling
+		
+		//jar
+		System.out.println("JAR FILE START =====>");
+
+		ZipEntry entry = jar.getEntry(name);
+		InputStream in = jar.getInputStream(entry);
+		
+		File temp = Files.createTempFile(null, null).toFile();
+		temp.deleteOnExit();
+
+		OutputStream out = new FileOutputStream(temp);
+		byte[] buffer = new byte[1024];//Generally small files
+		int len;
+		while((len = in.read(buffer)) != -1){
+			out.write(buffer, 0, len);
+		}
+		in.close();
+		out.flush();
+		out.close();
+		
+		res = new Enumeration<URL>(){
+			
+			private File file = temp;
+
+			@Override
+			public boolean hasMoreElements(){
+				return file != null;
+			}
+
+			@Override
+			public URL nextElement(){
+				try{
+					return file.toURI().toURL();
+				}catch(MalformedURLException e){
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return null;
+				}
+			}
+		};
+		
+		System.out.println("JAR FILE END <=====");
 		
 		return res;
 	}
