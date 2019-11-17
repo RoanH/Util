@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Enumeration;
+import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
@@ -59,17 +60,26 @@ public class SafeClassloader extends URLClassLoader{
 	@Override
 	public final URL getResource(String name){
 		URL res = super.getResource(name);
-		
+				
 		System.out.println("Get resource: " + res + " | name=" + name);
-		
+				
 		return res;
 	}
 	
 	@Override
 	public final InputStream getResourceAsStream(String name){
-		InputStream res = super.getResourceAsStream(name);
+		//InputStream res = super.getResourceAsStream(name);
+		
+		InputStream res = null;
+		try{
+			res = jar.getInputStream(jar.getEntry(name));
+		}catch(IOException e){
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		System.out.println("Stream: " + res + " | name=" + name);
+
 		
 		return res;
 	}
