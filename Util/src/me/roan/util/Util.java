@@ -7,6 +7,7 @@ import java.net.URL;
 
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 
 /**
  * Class with various utility subroutines.
@@ -98,6 +99,17 @@ public class Util{
 			return null;
 			//No Internet access or something else is wrong,
 			//No problem though since this isn't a critical function
+		}
+	}
+	
+	/**
+	 * Sets the program look and feel to the default
+	 * for the operating system the program is running on.
+	 */
+	public static final void installUI(){
+		try{
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		}catch(Throwable t){
 		}
 	}
 }
