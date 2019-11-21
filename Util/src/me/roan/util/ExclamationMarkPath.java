@@ -41,22 +41,39 @@ public class ExclamationMarkPath{
 	
 	private static File exe;
 	
-	public static void handleSituation(String args){
+	public static void check(String args){
 		if(check()){
 			showWarning(args);
 		}
 	}
 	
 	private static final void showWarning(String args){
-		
+		Dialog.showDialog(
+			"It seems that the current location for the program has a directory whose name ends with\n"
+			+ "an exclamation mark (!) on its path. Unfortunately due to a JDK Bug (one reported in August 2000)\n"
+			+ "this will make the program not work correctly.\n\n"
+			+ "The easiest way to solve this issue is to simple move the program\n"
+			+ "or rename the directory whose name ends with an exclamation mark.\n\n"
+			+ "If for some reason neither is an option the program can try to start itself from the temp directory\n"
+			+ "by clicking the button on this dialog.\n\n"
+			+ "Relevant JDK issue numbers are: 4361044, 4523159, 4730642, 6249364, 6390779 and 7188320.\n\n"
+			+ "Unfortunately this is not an issue I can fix, providing this information instead\n"
+			+ "of chrashing is the best I can do for the time being. The main reason for this is\n"
+			+ "because the bug is located in a part of Java I cannot modify and which cannot\n"
+			+ "be loaded or defined using custom class loaders.",
+			new String[]{
+				"Exit",
+				"Start from temp directory (might not work)"
+			}
+		);
 		
 		//TODO show warning and info dialog and provide the option to relaunch from temp
 		
 		
 		
 		//RL anyway
-		relaunchFromTemp(args);
-		Dialog.showMessageDialog("An error occured whilst trying to launch the program >.<");
+		//relaunchFromTemp(args);
+		//Dialog.showMessageDialog("An error occured whilst trying to launch the program >.<");
 
 	}
 
@@ -81,7 +98,7 @@ public class ExclamationMarkPath{
 		}
 		
 		//If there is an exclamation mark there is a problem
-		return exe.getAbsolutePath().contains("!");
+		return verifyPath(exe);
 	}
 
 	/**
@@ -116,7 +133,7 @@ public class ExclamationMarkPath{
 			tmp.deleteOnExit();
 
 			//Infinite loops are no fun
-			if(tmp.getAbsolutePath().contains("!")){
+			if(verifyPath(tmp)){
 				return;
 			}
 			
@@ -136,11 +153,30 @@ public class ExclamationMarkPath{
 		builder.redirectOutput(Redirect.INHERIT);
 		builder.redirectError(Redirect.INHERIT);
 		
-		//Start an hope for the best
+		//Start and hope for the best
 		try{
 			System.exit(builder.start().waitFor());
 		}catch(IOException | InterruptedException e){
 			e.printStackTrace();
 		}
+	}
+	
+	private static final boolean verifyPath(File file){
+		if(file == null){
+			return true;
+		}if(file.isFile()){
+			return verifyPath(file.getParentFile());
+		}else{
+			if(file.getName().endsWith("!")){
+				return false;
+			}else{
+				return verifyPath(file.getParentFile());
+			}
+		}
+	}
+	
+	public static void main(String[] args){
+		Util.installUI();
+		showWarning(null);
 	}
 }
