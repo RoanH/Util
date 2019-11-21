@@ -10,7 +10,7 @@ import javafx.stage.FileChooser;
 
 @SuppressWarnings("restriction")
 public class FileSelector{
-	private static final boolean initialised;
+	private static boolean initialised;
 
 
 	private static final void showFileOpenSwing(){
@@ -35,10 +35,13 @@ public class FileSelector{
 	}
 	
 	static{
-		
-		System.load(new File("Util.dll").getAbsolutePath());
-		
-		
-		initialised = true;
+		try{
+			//TODO load from jar
+			System.load(new File("Util.dll").getAbsolutePath());
+			initialised = true;
+		}catch(UnsatisfiedLinkError e){
+			e.printStackTrace();//TODO remove
+			initialised = false;
+		}
 	}
 }
