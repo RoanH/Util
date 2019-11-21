@@ -48,7 +48,7 @@ public class ExclamationMarkPath{
 	}
 	
 	private static final void showWarning(String args){
-		Dialog.showDialog(
+		int option = Dialog.showDialog(
 			"It seems that the current location for the program has a directory whose name ends with\n"
 			+ "an exclamation mark (!) on its path. Unfortunately due to a JDK Bug (one reported in August 2000)\n"
 			+ "this will make the program not work correctly.\n\n"
@@ -67,14 +67,10 @@ public class ExclamationMarkPath{
 			}
 		);
 		
-		//TODO show warning and info dialog and provide the option to relaunch from temp
-		
-		
-		
-		//RL anyway
-		//relaunchFromTemp(args);
-		//Dialog.showMessageDialog("An error occured whilst trying to launch the program >.<");
-
+		if(option == 1){
+			relaunchFromTemp(args);
+		}
+		System.exit(0);
 	}
 
 	/**
@@ -175,6 +171,7 @@ public class ExclamationMarkPath{
 		}
 	}
 	
+	//TODO remove
 	public static void main(String[] args){
 		Util.installUI();
 		showWarning(null);
