@@ -1,6 +1,13 @@
 package me.roan.util;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.util.Locale;
 
 import javax.swing.JFileChooser;
 
@@ -58,19 +65,48 @@ public class FileSelector{
 	private static native String showNativeFileSave();
 
 	public static void main(String[] args){
-		System.out.println("fopen (file): " + showFileOpenDialog());
-		System.out.println("fopen (folder): " + showFolderOpenDialog());
-		System.out.println("fsave: " + showFileSaveDialog());
+		//System.out.println("fopen (file): " + showFileOpenDialog());
+		//System.out.println("fopen (folder): " + showFolderOpenDialog());
+		//System.out.println("fsave: " + showFileSaveDialog());
+		
+		System.out.println(System.getProperty("os.arch"));
+		System.out.println(System.getProperty("os.name"));
+
 	}
 	
 	static{
-		try{
-			//TODO load from jar
-			System.load(new File("Util.dll").getAbsolutePath());
-			initialised = true;
-		}catch(UnsatisfiedLinkError e){
-			e.printStackTrace();//TODO remove
-			initialised = false;
+		initialised = false;
+
+		if(System.getProperty("os.name").toLowerCase(Locale.ROOT).contains("windows")){
+			String arch = System.getProperty("os.arch");
+			if(arch.equals("amd64") || arch.equals("x86")){
+				try(InputStream in = ClassLoader.getSystemResourceAsStream("me/roan/util/lib/" + arch + "/Util.dll")){
+					if(in != null){
+						Path tmp = Files.createTempFile("Util", ".dll");
+						tmp.toFile().deleteOnExit();
+						
+						try(OutputStream out = Files.newOutputStream(tmp, StandardOpenOption.CREATE)){
+							byte[] buffer = new byte[1024];
+							int len;
+							while((len = in.read(buffer)) != -1){
+								out.write(buffer, 0, len);
+							}
+							
+							out.flush();
+							
+							try{
+								System.load(tmp.toAbsolutePath().toString());
+								initialised = true;
+							}catch(UnsatisfiedLinkError ignore){
+							}
+						}
+					}
+				}catch(IOException ignore){
+				}				
+			}
+		}
+		
+		if(!initialised){
 			chooser = new JFileChooser();
 		}
 	}
