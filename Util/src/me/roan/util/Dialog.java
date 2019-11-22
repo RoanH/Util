@@ -1,6 +1,7 @@
 package me.roan.util;
 
 import java.awt.Image;
+import java.io.File;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -157,6 +158,18 @@ public class Dialog{
 			}
 		}
 		return -1;
+	}
+	
+	public static final File showFileOpenDialog(){
+		return FileSelector.showFileOpenDialog();
+	}
+	
+	public static final File showFolderOpenDialog(){
+		return FileSelector.showFolderOpenDialog();
+	}
+	
+	public static final File showFileSaveDialog(){
+		return FileSelector.showFileSaveDialog();
 	}
 	
 	/**
