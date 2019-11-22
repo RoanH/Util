@@ -27,7 +27,7 @@ public class FileSelector{
 	private static native String showNativeFileSave();
 
 	public static void main(String[] args){
-		if(initialised){
+		if(!initialised){
 			showNativeFileOpen();
 		}else{
 			showFileOpenSwing();

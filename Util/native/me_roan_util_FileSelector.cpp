@@ -45,10 +45,16 @@ LPWSTR showDialog(int flags){
 }
 
 jstring toString(JNIEnv *env, LPWSTR data){
+	if(data == NULL){
+		return NULL;
+	}else{
 
+		wprintf(data);
 
-	CoTaskMemFree(data);
-	return NULL;
+		//jstring str = env->NewStringUTF(data);
+		CoTaskMemFree(data);
+		return NULL;
+	}
 }
 
 JNIEXPORT jstring JNICALL Java_me_roan_util_FileSelector_showNativeFileOpen(JNIEnv *env, jclass obj){
