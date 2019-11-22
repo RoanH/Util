@@ -48,10 +48,6 @@ jstring toString(JNIEnv *env, LPWSTR data){
 	if(data == NULL){
 		return NULL;
 	}else{
-
-		wprintf(data);
-		wprintf(L"“ú–{Œê");
-
 		int len = WideCharToMultiByte(CP_UTF8, 0, data, -1, NULL, 0, NULL, NULL);
 		if(len == 0){
 			return NULL;
