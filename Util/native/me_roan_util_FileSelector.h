@@ -15,6 +15,14 @@ extern "C" {
 JNIEXPORT jstring JNICALL Java_me_roan_util_FileSelector_showNativeFileOpen
   (JNIEnv *, jclass);
 
+/*
+ * Class:     me_roan_util_FileSelector
+ * Method:    showNativeFolderOpen
+ * Signature: ()Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_me_roan_util_FileSelector_showNativeFolderOpen
+  (JNIEnv *, jclass);
+
 #ifdef __cplusplus
 }
 #endif

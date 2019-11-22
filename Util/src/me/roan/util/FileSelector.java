@@ -21,6 +21,8 @@ public class FileSelector{
 	}
 
 	private static native String showNativeFileOpen();
+	
+	private static native String showNativeFolderOpen();
 
 	public static void main(String[] args){
 		if(initialised){
