@@ -4,11 +4,6 @@ import java.io.File;
 
 import javax.swing.JFileChooser;
 
-import javafx.application.Platform;
-import javafx.embed.swing.JFXPanel;
-import javafx.stage.FileChooser;
-
-@SuppressWarnings("restriction")
 public class FileSelector{
 	private static boolean initialised;
 
@@ -27,7 +22,7 @@ public class FileSelector{
 	private static native String showNativeFileSave();
 
 	public static void main(String[] args){
-		if(!initialised){
+		if(initialised){
 			showNativeFileOpen();
 		}else{
 			showFileOpenSwing();

@@ -50,6 +50,7 @@ jstring toString(JNIEnv *env, LPWSTR data){
 	}else{
 
 		wprintf(data);
+		wprintf(L"“ú–{Œê");
 
 		//jstring str = env->NewStringUTF(data);
 		CoTaskMemFree(data);
