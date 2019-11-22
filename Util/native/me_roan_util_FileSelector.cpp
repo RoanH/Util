@@ -9,8 +9,8 @@
 #define FILES 8
 #define FOLDERS 16
 
-LPWSTR showOpenFileDialog(int flags){
-	LPWSTR path;
+LPWSTR showDialog(int flags){
+	LPWSTR path = NULL;
 	HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
 	if(SUCCEEDED(hr)){
 		IFileDialog* dialog;
@@ -44,7 +44,7 @@ LPWSTR showOpenFileDialog(int flags){
 	return path;
 }
 
-jstring toString(JNIEnv* env, LPWSTR data){
+jstring toString(JNIEnv *env, LPWSTR data){
 
 
 	CoTaskMemFree(data);
@@ -52,17 +52,13 @@ jstring toString(JNIEnv* env, LPWSTR data){
 }
 
 JNIEXPORT jstring JNICALL Java_me_roan_util_FileSelector_showNativeFileOpen(JNIEnv *env, jclass obj){
-	//showOpenDialog(0);
-	showOpenFileDialog(0);
-
-
-
-	return NULL;
+	return toString(env, showDialog(FILES | OPEN));
 }
 
 JNIEXPORT jstring JNICALL Java_me_roan_util_FileSelector_showNativeFolderOpen(JNIEnv *env, jclass obj){
+	return toString(env, showDialog(FOLDERS | OPEN));
+}
 
-
-
-	return NULL;
+JNIEXPORT jstring JNICALL Java_me_roan_util_FileSelector_showNativeFileSave(JNIEnv *env, jclass obj){
+	return toString(env, showDialog(FILES | SAVE));
 }

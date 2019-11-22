@@ -23,6 +23,8 @@ public class FileSelector{
 	private static native String showNativeFileOpen();
 	
 	private static native String showNativeFolderOpen();
+	
+	private static native String showNativeFileSave();
 
 	public static void main(String[] args){
 		if(initialised){
@@ -30,10 +32,6 @@ public class FileSelector{
 		}else{
 			showFileOpenSwing();
 		}
-	}
-
-	private static class FileData{
-		File file;
 	}
 	
 	static{
