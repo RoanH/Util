@@ -65,9 +65,9 @@ public class FileSelector{
 	private static native String showNativeFileSave();
 
 	public static void main(String[] args){
-		//System.out.println("fopen (file): " + showFileOpenDialog());
-		//System.out.println("fopen (folder): " + showFolderOpenDialog());
-		//System.out.println("fsave: " + showFileSaveDialog());
+		System.out.println("fopen (file): " + showFileOpenDialog());
+		System.out.println("fopen (folder): " + showFolderOpenDialog());
+		System.out.println("fsave: " + showFileSaveDialog());
 		
 		System.out.println(System.getProperty("os.arch"));
 		System.out.println(System.getProperty("os.name"));
@@ -93,15 +93,17 @@ public class FileSelector{
 							}
 							
 							out.flush();
-							
-							try{
-								System.load(tmp.toAbsolutePath().toString());
-								initialised = true;
-							}catch(UnsatisfiedLinkError ignore){
-							}
+						}
+						
+						try{
+							System.load(tmp.toAbsolutePath().toString());
+							initialised = true;
+						}catch(UnsatisfiedLinkError ignore){
+							ignore.printStackTrace();
 						}
 					}
 				}catch(IOException ignore){
+					ignore.printStackTrace();
 				}				
 			}
 		}
