@@ -99,11 +99,11 @@ public class FileSelector{
 							System.load(tmp.toAbsolutePath().toString());
 							initialised = true;
 						}catch(UnsatisfiedLinkError ignore){
-							ignore.printStackTrace();
+							ignore.printStackTrace();//TODO remove
 						}
 					}
 				}catch(IOException ignore){
-					ignore.printStackTrace();
+					ignore.printStackTrace();//TODO remove
 				}				
 			}
 		}
