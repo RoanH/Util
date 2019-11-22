@@ -23,7 +23,8 @@ public class FileSelector{
 
 	public static void main(String[] args){
 		if(initialised){
-			showNativeFileOpen();
+			String file = showNativeFileOpen();
+			System.out.println("file recv: " + file + " | " + file.length());
 		}else{
 			showFileOpenSwing();
 		}

@@ -13,7 +13,7 @@ LPWSTR showDialog(int flags){
 	LPWSTR path = NULL;
 	HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
 	if(SUCCEEDED(hr)){
-		IFileDialog* dialog;
+		IFileDialog *dialog;
 		if((flags & SAVE) > 0){
 			hr = CoCreateInstance(CLSID_FileSaveDialog, NULL, CLSCTX_ALL, IID_IFileSaveDialog, reinterpret_cast<void**>(&dialog));
 		}else{
@@ -30,7 +30,7 @@ LPWSTR showDialog(int flags){
 			
 			hr = dialog->Show(NULL);
 			if(SUCCEEDED(hr)){
-				IShellItem* item;
+				IShellItem *item;
 				hr = dialog->GetResult(&item);
 				if(SUCCEEDED(hr)){
 					item->GetDisplayName(SIGDN_FILESYSPATH, &path);
@@ -52,9 +52,22 @@ jstring toString(JNIEnv *env, LPWSTR data){
 		wprintf(data);
 		wprintf(L"“ú–{Œê");
 
-		//jstring str = env->NewStringUTF(data);
+		int len = WideCharToMultiByte(CP_UTF8, 0, data, -1, NULL, 0, NULL, NULL);
+		if(len == 0){
+			return NULL;
+		}
+
+		char* utf8 = (char*)malloc(len);
+
+		len = WideCharToMultiByte(CP_UTF8, 0, data, -1, utf8, len, NULL, NULL);
+		if(len == 0){
+			return NULL;
+		}
+
+		jstring str = env->NewStringUTF(utf8);
+		free(utf8);
 		CoTaskMemFree(data);
-		return NULL;
+		return str;
 	}
 }
 
