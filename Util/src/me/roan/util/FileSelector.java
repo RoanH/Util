@@ -46,11 +46,15 @@ public class FileSelector{
 			return toFile(showNativeFileSave());
 		}else{
 			chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-			if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION){
-				return chooser.getSelectedFile();
-			}else{
-				return null;
+			while(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION){
+				File file = chooser.getSelectedFile();
+				if(file.exists() && !Dialog.showConfirmDialog(file.getName() + " already exists.\nDo you want to replace it?")){
+					continue;
+				}
+
+				return file;
 			}
+			return null;
 		}
 	}
 	
@@ -63,16 +67,6 @@ public class FileSelector{
 	private static native String showNativeFolderOpen();
 	
 	private static native String showNativeFileSave();
-
-	public static void main(String[] args){
-		System.out.println("fopen (file): " + showFileOpenDialog());
-		System.out.println("fopen (folder): " + showFolderOpenDialog());
-		System.out.println("fsave: " + showFileSaveDialog());
-		
-		System.out.println(System.getProperty("os.arch"));
-		System.out.println(System.getProperty("os.name"));
-
-	}
 	
 	static{
 		initialised = false;
