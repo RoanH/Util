@@ -82,6 +82,7 @@ public class ExclamationMarkPath{
 			}else{
 				showWarning(args);
 			}
+			System.exit(0);
 		}
 	}
 	
@@ -114,7 +115,6 @@ public class ExclamationMarkPath{
 		if(option == 1){
 			relaunchFromTemp(args);
 		}
-		System.exit(0);
 	}
 
 	/**
