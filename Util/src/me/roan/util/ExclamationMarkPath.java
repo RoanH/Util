@@ -8,6 +8,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.security.CodeSource;
+import java.util.Arrays;
 
 /**
  * Currently as of writing this class there is a bug in the JDK where
@@ -41,13 +42,21 @@ public class ExclamationMarkPath{
 	
 	private static File exe;
 	
-	public static void check(String args){
+	public static void check(String... args){
+		check(false, args);
+	}
+	
+	public static void check(boolean suppressWarning, String... args){
 		if(check()){
-			showWarning(args);
+			if(suppressWarning || (args != null && args.length != 0 && args[args.length - 1].equalsIgnoreCase("-relaunch"))){
+				relaunchFromTemp(args);
+			}else{
+				showWarning(args);
+			}
 		}
 	}
 	
-	private static final void showWarning(String args){
+	private static final void showWarning(String... args){
 		int option = Dialog.showDialog(
 			"It seems that the current location for the program has a directory whose name ends with\n"
 			+ "an exclamation mark (!) on its path. Unfortunately due to a JDK Bug (one reported in August 2000)\n"
@@ -106,7 +115,7 @@ public class ExclamationMarkPath{
 	 * @param args The original command line arguments
 	 *        <code>null</code> allowed for none.
 	 */
-	private static final void relaunchFromTemp(String args){
+	private static final void relaunchFromTemp(String... args){
 		if(!exe.exists()){
 			//All hope lost
 			return;
@@ -125,7 +134,7 @@ public class ExclamationMarkPath{
 		//Attempt to copy the program to the temp directory
 		File tmp = null;
 		try{
-			tmp = File.createTempFile(null, null);
+			tmp = Files.createTempFile(null, null).toFile();
 			tmp.deleteOnExit();
 
 			//Infinite loops are no fun
@@ -141,8 +150,17 @@ public class ExclamationMarkPath{
 		
 		//Build the new process
 		ProcessBuilder builder = new ProcessBuilder();
-		if(args != null){
-			builder.command(jvm, "-jar", tmp.getAbsolutePath(), args);
+		if(args != null && args.length != 0){
+			if(args.length == 1){
+				builder.command(jvm, "-jar", tmp.getAbsolutePath(), args[0]);
+			}else{
+				String[] cmd = new String[args.length + 3];
+				cmd[0] = jvm;
+				cmd[1] = "-jar";
+				cmd[2] = tmp.getAbsolutePath();
+				System.arraycopy(args, 0, cmd, 3, args.length);
+				builder.command(cmd);
+			}
 		}else{
 			builder.command(jvm, "-jar", tmp.getAbsolutePath());
 		}
@@ -159,12 +177,12 @@ public class ExclamationMarkPath{
 	
 	private static final boolean verifyPath(File file){
 		if(file == null){
-			return true;
+			return false;
 		}if(file.isFile()){
 			return verifyPath(file.getParentFile());
 		}else{
 			if(file.getName().endsWith("!")){
-				return false;
+				return true;
 			}else{
 				return verifyPath(file.getParentFile());
 			}
@@ -174,6 +192,7 @@ public class ExclamationMarkPath{
 	//TODO remove
 	public static void main(String[] args){
 		Util.installUI();
-		showWarning(null);
+		ExclamationMarkPath.check(args);
+		System.out.println("After: " + Arrays.toString(args));
 	}
 }
