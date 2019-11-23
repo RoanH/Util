@@ -8,7 +8,6 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.security.CodeSource;
-import java.util.Arrays;
 
 /**
  * Currently as of writing this class there is a bug in the JDK where
@@ -56,6 +55,12 @@ public class ExclamationMarkPath{
 		}
 	}
 	
+	/**
+	 * Shows a warning dialog to the user about the
+	 * situation with the option to exit or try
+	 * to relaunch from the temp directory.
+	 * @param args The command line arguments that were passed.
+	 */
 	private static final void showWarning(String... args){
 		int option = Dialog.showDialog(
 			"It seems that the current location for the program has a directory whose name ends with\n"
@@ -108,10 +113,10 @@ public class ExclamationMarkPath{
 
 	/**
 	 * Re-launches the program from the temp directory
-	 * if the program path contains a ! this fixes the
-	 * JDK bug. If this subroutine managed to execute
-	 * properly the call to this subroutine will never
-	 * return.
+	 * if the program path contains a <tt>(!)</tt> this
+	 * fixes the JDK bug. If this subroutine managed to
+	 * execute properly the call to this subroutine will
+	 * never return.
 	 * @param args The original command line arguments
 	 *        <code>null</code> allowed for none.
 	 */
@@ -175,6 +180,14 @@ public class ExclamationMarkPath{
 		}
 	}
 	
+	/**
+	 * Checks if any folder on the path to the
+	 * given file ends with an exclamation mark 
+	 * <tt>(!)</tt>.
+	 * @param file The file to check the path of.
+	 * @return True if an exclamation mark was
+	 *         found on the path for the given file.
+	 */
 	private static final boolean verifyPath(File file){
 		if(file == null){
 			return false;
@@ -187,12 +200,5 @@ public class ExclamationMarkPath{
 				return verifyPath(file.getParentFile());
 			}
 		}
-	}
-	
-	//TODO remove
-	public static void main(String[] args){
-		Util.installUI();
-		ExclamationMarkPath.check(args);
-		System.out.println("After: " + Arrays.toString(args));
 	}
 }
