@@ -1,6 +1,7 @@
 package me.roan.util;
 
 import java.awt.Image;
+import java.io.File;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -157,6 +158,44 @@ public class Dialog{
 			}
 		}
 		return -1;
+	}
+	
+	/**
+	 * Opens a file open dialog.
+	 * @return The file that was selected,
+	 *         this file may or may not actually
+	 *         exist on the file system. If the
+	 *         operation was cancelled 
+	 *         <code>null</code> is returned.
+	 */
+	public static final File showFileOpenDialog(){
+		return FileSelector.showFileOpenDialog();
+	}
+	
+	/**
+	 * Opens a folder open dialog.
+	 * @return The folder that was selected,
+	 *         this folder may or may not actually
+	 *         exist on the file system. If the
+	 *         operation was cancelled 
+	 *         <code>null</code> is returned.
+	 */
+	public static final File showFolderOpenDialog(){
+		return FileSelector.showFolderOpenDialog();
+	}
+	
+	/**
+	 * Opens a file save dialog.
+	 * @return The file that was selected,
+	 *         this file may or may not actually
+	 *         exist on the file system. If the
+	 *         file exists the user has already
+	 *         agreed to overwrite it. If the
+	 *         operation was cancelled 
+	 *         <code>null</code> is returned.
+	 */
+	public static final File showFileSaveDialog(){
+		return FileSelector.showFileSaveDialog();
 	}
 	
 	/**

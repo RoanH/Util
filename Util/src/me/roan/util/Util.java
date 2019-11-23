@@ -109,7 +109,7 @@ public class Util{
 	public static final void installUI(){
 		try{
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		}catch(Throwable t){
+		}catch(Throwable ignore){
 		}
 	}
 }
