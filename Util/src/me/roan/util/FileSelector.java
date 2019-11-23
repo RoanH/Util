@@ -11,10 +11,34 @@ import java.util.Locale;
 
 import javax.swing.JFileChooser;
 
+/**
+ * File chooser implementation that when
+ * possible shows the new style Windows
+ * file selector and other falls back
+ * to the Swing file chooser.
+ * @author Roan
+ * @see JFileChooser
+ */
 public class FileSelector{
+	/**
+	 * True if the native library
+	 * is loaded.
+	 */
 	private static boolean initialised;
+	/**
+	 * File chooser instance if no
+	 * native library is loaded.
+	 */
 	private static JFileChooser chooser;
 	
+	/**
+	 * Opens a file open dialog.
+	 * @return The file that was selected,
+	 *         this file may or may not actually
+	 *         exist on the file system. If the
+	 *         operation was cancelled 
+	 *         <code>null</code> is returned.
+	 */
 	public static final File showFileOpenDialog(){
 		if(initialised){
 			return toFile(showNativeFileOpen());
@@ -28,6 +52,14 @@ public class FileSelector{
 		}
 	}
 	
+	/**
+	 * Opens a folder open dialog.
+	 * @return The folder that was selected,
+	 *         this folder may or may not actually
+	 *         exist on the file system. If the
+	 *         operation was cancelled 
+	 *         <code>null</code> is returned.
+	 */
 	public static final File showFolderOpenDialog(){
 		if(initialised){
 			return toFile(showNativeFolderOpen());
@@ -41,6 +73,16 @@ public class FileSelector{
 		}
 	}
 	
+	/**
+	 * Opens a file save dialog.
+	 * @return The file that was selected,
+	 *         this file may or may not actually
+	 *         exist on the file system. If the
+	 *         file exists the user has already
+	 *         agreed to overwrite it. If the
+	 *         operation was cancelled 
+	 *         <code>null</code> is returned.
+	 */
 	public static final File showFileSaveDialog(){
 		if(initialised){
 			return toFile(showNativeFileSave());
@@ -58,14 +100,39 @@ public class FileSelector{
 		}
 	}
 	
+	/**
+	 * Converts the given file path to a
+	 * Java file instance.
+	 * @param path The part to parse.
+	 * @return A file instance for the given
+	 *         path or <code>null</code> if
+	 *         the given path was <code>null</code>.
+	 *         The path is not validated in any way.
+	 * @see File
+	 */
 	private static File toFile(String path){
 		return path == null ? null : new File(path);
 	}
 
+	/**
+	 * Opens the native file open dialog.
+	 * @return The file that was selected or
+	 *         <code>null</code> if no file was selected.
+	 */
 	private static native String showNativeFileOpen();
 	
+	/**
+	 * Opens the native folder open dialog.
+	 * @return The folder that was selected or
+	 *         <code>null</code> if no folder was selected.
+	 */
 	private static native String showNativeFolderOpen();
 	
+	/**
+	 * Opens the native file save dialog.
+	 * @return The file that was selected or
+	 *         <code>null</code> if no file was selected.
+	 */
 	private static native String showNativeFileSave();
 	
 	static{
@@ -93,11 +160,9 @@ public class FileSelector{
 							System.load(tmp.toAbsolutePath().toString());
 							initialised = true;
 						}catch(UnsatisfiedLinkError ignore){
-							ignore.printStackTrace();//TODO remove
 						}
 					}
 				}catch(IOException ignore){
-					ignore.printStackTrace();//TODO remove
 				}				
 			}
 		}
