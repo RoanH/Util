@@ -4,11 +4,16 @@
 #include <stdio.h>
 #include "me_roan_util_FileSelector.h"
 
+//Save dialog
 #define SAVE 2
+//Open dialog
 #define OPEN 4
+//File selection
 #define FILES 8
+//Folder selection
 #define FOLDERS 16
 
+//Shows a dialog according to the passed flags (see definitions)
 LPWSTR showDialog(int flags){
 	LPWSTR path = NULL;
 	HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
@@ -44,6 +49,7 @@ LPWSTR showDialog(int flags){
 	return path;
 }
 
+//Converts a LPWSTR to a jstring using the given JNI environment
 jstring toString(JNIEnv *env, LPWSTR data){
 	if(data == NULL){
 		return NULL;
@@ -67,14 +73,17 @@ jstring toString(JNIEnv *env, LPWSTR data){
 	}
 }
 
+//Native subroutine for me.roan.util.FileSelector#showNativeFileOpen
 JNIEXPORT jstring JNICALL Java_me_roan_util_FileSelector_showNativeFileOpen(JNIEnv *env, jclass obj){
 	return toString(env, showDialog(FILES | OPEN));
 }
 
+//Native subroutine for me.roan.util.FileSelector#showNativeFolderOpen
 JNIEXPORT jstring JNICALL Java_me_roan_util_FileSelector_showNativeFolderOpen(JNIEnv *env, jclass obj){
 	return toString(env, showDialog(FOLDERS | OPEN));
 }
 
+//Native subroutine for me.roan.util.FileSelector#showNativeFileSave
 JNIEXPORT jstring JNICALL Java_me_roan_util_FileSelector_showNativeFileSave(JNIEnv *env, jclass obj){
 	return toString(env, showDialog(FILES | SAVE));
 }
