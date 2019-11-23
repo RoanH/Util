@@ -29,7 +29,7 @@ compileJava.options.encoding = 'UTF-8'
 sourceCompatibility = 1.8
 
 group = 'com.github.RoanH'
-version = System.getenv("VERSION") ?: '1.0-SNAPSHOT'
+version = System.getenv("VERSION") ?: '1.4-SNAPSHOT'
 
 publishing{
 	publications{
