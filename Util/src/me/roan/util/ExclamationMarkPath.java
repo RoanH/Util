@@ -38,13 +38,43 @@ import java.security.CodeSource;
  * @see java.net.JarURLConnection
  */
 public class ExclamationMarkPath{
-	
+	/**
+	 * Current location of the program executable.
+	 * <p>
+	 * Set by {@link #check()}
+	 */
 	private static File exe;
 	
+	/**
+	 * Checks if the current location of the program is
+	 * affected by the bug. If the current location is
+	 * not affected this subroutine just returns without
+	 * doing anything.
+	 * @param args Command line arguments that the program
+	 *        was started with. If the last argument is
+	 *        equal to <tt>-relaunch</tt> the warning
+	 *        dialog is skipped and the program is immediately
+	 *        relaunched from the temporary directory.
+	 */
 	public static void check(String... args){
 		check(false, args);
 	}
 	
+	/**
+	 * Checks if the current location of the program is
+	 * affected by the bug. If the current location is
+	 * not affected this subroutine just returns without
+	 * doing anything.
+	 * @param suppressWarning Suppresses the normal warning
+	 *        dialog and instead proceeds as if the user
+	 *        chose to relaunch the program from the
+	 *        temporary directory.
+	 * @param args Command line arguments that the program
+	 *        was started with. If the last argument is
+	 *        equal to <tt>-relaunch</tt> the warning
+	 *        dialog is skipped and the program is immediately
+	 *        relaunched from the temporary directory.
+	 */
 	public static void check(boolean suppressWarning, String... args){
 		if(check()){
 			if(suppressWarning || (args != null && args.length != 0 && args[args.length - 1].equalsIgnoreCase("-relaunch"))){
