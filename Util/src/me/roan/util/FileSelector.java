@@ -171,4 +171,8 @@ public class FileSelector{
 			chooser = new JFileChooser();
 		}
 	}
+	
+	public static void main(String[] args){
+		showFileOpenDialog();
+	}
 }

@@ -32,6 +32,12 @@ LPWSTR showDialog(int flags){
 					dialog->SetOptions(options | FOS_PICKFOLDERS);
 				}
 			}
+
+			COMDLG_FILTERSPEC spec[] = {
+				{L"Image files", L"*.jpg"}
+			};
+
+			dialog->SetFileTypes(1, spec);
 			
 			hr = dialog->Show(NULL);
 			if(SUCCEEDED(hr)){
