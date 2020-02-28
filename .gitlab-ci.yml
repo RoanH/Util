@@ -63,6 +63,14 @@ compile:
     expire_in: 1 week
     paths:
       - ${PROJECTNAME}-*.jar
+
+dll:
+  image: roanh/buildtools2019:latest
+  script:
+    - echo "test"
+    - devenv.exe
+  stage: compile
+  environment: builds
       
 publish:
   script:
