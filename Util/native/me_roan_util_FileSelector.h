@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     me_roan_util_FileSelector
  * Method:    showNativeFileOpen
- * Signature: ()Ljava/lang/String;
+ * Signature: (II)Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL Java_me_roan_util_FileSelector_showNativeFileOpen
-  (JNIEnv *, jclass);
+  (JNIEnv *, jclass, jint, jint);
 
 /*
  * Class:     me_roan_util_FileSelector
@@ -26,18 +26,18 @@ JNIEXPORT jstring JNICALL Java_me_roan_util_FileSelector_showNativeFolderOpen
 /*
  * Class:     me_roan_util_FileSelector
  * Method:    showNativeFileSave
- * Signature: ()Ljava/lang/String;
+ * Signature: (II)Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL Java_me_roan_util_FileSelector_showNativeFileSave
-  (JNIEnv *, jclass);
+  (JNIEnv *, jclass, jint, jint);
 
 /*
  * Class:     me_roan_util_FileSelector
- * Method:    registerFileExtension
- * Signature: (Ljava/lang/String;Ljava/lang/String;)I
+ * Method:    registerNativeFileExtension
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)I
  */
-JNIEXPORT jint JNICALL Java_me_roan_util_FileSelector_registerFileExtension
-  (JNIEnv *, jclass, jstring, jstring);
+JNIEXPORT jint JNICALL Java_me_roan_util_FileSelector_registerNativeFileExtension
+  (JNIEnv *, jclass, jstring, jstring, jstring);
 
 #ifdef __cplusplus
 }
