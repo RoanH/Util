@@ -13,6 +13,9 @@
 //Folder selection
 #define FOLDERS 16
 
+COMDLG_FILTERSPEC *extensions;
+int ext_num = 0;
+
 //Shows a dialog according to the passed flags (see definitions)
 LPWSTR showDialog(int flags){
 	LPWSTR path = NULL;
@@ -65,7 +68,7 @@ jstring toString(JNIEnv *env, LPWSTR data){
 			return NULL;
 		}
 
-		char* utf8 = (char*)malloc(len);
+		char *utf8 = (char*)malloc(len);
 
 		len = WideCharToMultiByte(CP_UTF8, 0, data, -1, utf8, len, NULL, NULL);
 		if(len == 0){
@@ -92,4 +95,31 @@ JNIEXPORT jstring JNICALL Java_me_roan_util_FileSelector_showNativeFolderOpen(JN
 //Native subroutine for me.roan.util.FileSelector#showNativeFileSave
 JNIEXPORT jstring JNICALL Java_me_roan_util_FileSelector_showNativeFileSave(JNIEnv *env, jclass obj){
 	return toString(env, showDialog(FILES | SAVE));
+}
+
+//Native subroutine for me.roan.util.FileSelector#registerFileExtension
+JNIEXPORT jint JNICALL Java_me_roan_util_FileSelector_registerFileExtension(JNIEnv* env, jclass obj, jstring name, jstring ext){
+	if(ext_num == 0){
+		extensions = (COMDLG_FILTERSPEC*)malloc(sizeof(COMDLG_FILTERSPEC));
+		if(extensions == NULL){
+			return -1;
+		}else{
+			ext_num = 1;
+		}
+	}else{
+		ext_num++;
+		COMDLG_FILTERSPEC *new_extensions = (COMDLG_FILTERSPEC*)realloc(extensions, ext_num * sizeof(COMDLG_FILTERSPEC));
+		if(new_extensions == NULL){
+			return -1;
+		}else{
+			extensions = new_extensions;
+		}
+	}
+	
+	extensions[ext_num - 1] = {
+		(wchar_t*)env->GetStringChars(name, FALSE),
+		(wchar_t*)env->GetStringChars(ext, FALSE)
+	};
+
+	return -1;
 }
