@@ -135,6 +135,8 @@ public class FileSelector{
 	 */
 	private static native String showNativeFileSave();
 	
+	private static native int registerFileExtension(String desc, String filter);
+	
 	static{
 		initialised = false;
 
