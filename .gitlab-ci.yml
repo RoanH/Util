@@ -66,6 +66,8 @@ compile:
 
 dll:
   image: roanh/buildtools2019:latest
+  tags:
+    - Windows
   script:
     - echo "test"
     - devenv.exe
