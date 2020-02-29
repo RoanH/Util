@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include "me_roan_util_FileSelector.h"
 #include <sstream>
+#include <iostream>
 
 //Save dialog
 #define SAVE 2
@@ -77,6 +78,21 @@ LPWSTR showDialog(int flags, long types, long typec){
 
 					//TODO
 					//path = (std::wstring(path) + L"." + std::wstring(extensions[index - 1].def)).c_str;
+					//std::wstring temp = std::wstring(path) + L"." + std::wstring(extensions[index - 1].def);
+					//path = &temp[0];
+
+					std::wstring temp = std::wstring(path) + L"." + std::wstring(extensions[index - 1].def);
+					path = &temp[0];
+
+					std::wcout << temp;
+					std::wcout << "\n";
+					fflush(stdout);
+
+					printf("Part 2\n");
+
+					std::wcout << path;
+					std::wcout << "\n";
+					fflush(stdout);
 				}
 			}
 			dialog->Release();

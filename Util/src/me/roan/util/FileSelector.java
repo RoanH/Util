@@ -180,7 +180,7 @@ public class FileSelector{
 		registerNativeFileExtension("Png", "*.png", "png");
 		//File out = showFileOpenDialog();
 		File out = showFileSaveDialog();
-		System.out.println(out);
+		System.out.println("Returned:" + out);
 		Thread.sleep(10000);
 	}
 }
