@@ -23,14 +23,6 @@ typedef struct{
 FILE_TYPE *extensions;
 int ext_num = 0;
 
-class EventHandler : public IFileDialogEvents{
-public:
-	IFACEMETHODIMP OnFileOk(IFileDialog* pfd){
-		printf("On file OK\n");
-		return S_OK;
-	}
-};
-
 //Shows a dialog according to the passed flags (see definitions)
 LPWSTR showDialog(int flags, long types, long typec){
 	LPWSTR path = NULL;
@@ -77,9 +69,6 @@ LPWSTR showDialog(int flags, long types, long typec){
 
 			//TODO pass as argument
 			//hr = dialog->SetFileName(L"test.png");
-
-			//TODO abstract only for save
-			//hr = dialog->Advise(, "TypeCheck");
 
 			//Force an extension, this being the default
 			dialog->SetDefaultExtension(L"png;");
