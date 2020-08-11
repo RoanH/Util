@@ -85,7 +85,7 @@ public class FileSelector{
 	 */
 	public static final File showFileSaveDialog(){
 		if(initialised){
-			return toFile(showNativeFileSave(1 + 4, 2));//XXX
+			return toFile(showNativeFileSave(1));//XXX
 		}else{
 			chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 			while(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION){
@@ -133,7 +133,7 @@ public class FileSelector{
 	 * @return The file that was selected or
 	 *         <code>null</code> if no file was selected.
 	 */
-	private static native String showNativeFileSave(int types, int typec);
+	private static native String showNativeFileSave(int type);
 	
 	private static native int registerNativeFileExtension(String desc, String filter, String extension);
 	
@@ -175,10 +175,10 @@ public class FileSelector{
 	}
 	
 	public static void main(String[] args) throws InterruptedException{
-		registerNativeFileExtension("Images", "*.png", "png");
-		registerNativeFileExtension("Ini", "*.ini", "ini");
-		registerNativeFileExtension("Png", "*.png", "png");
-		//File out = showFileOpenDialog();
+		int png = registerNativeFileExtension("Images", "*.png;*.jpg", "png");
+		int ini = registerNativeFileExtension("Ini", "*.ini", "ini");
+		//registerNativeFileExtension("Png", "*.png", "png");
+		//String out = showNativeFileOpen(1, png);
 		File out = showFileSaveDialog();
 		System.out.println("Returned:" + out);
 		Thread.sleep(10000);

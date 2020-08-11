@@ -23,9 +23,16 @@ typedef struct{
 FILE_TYPE *extensions;
 int ext_num = 0;
 
+class EventHandler : public IFileDialogEvents{
+public:
+	IFACEMETHODIMP OnFileOk(IFileDialog* pfd){
+		printf("On file OK\n");
+		return S_OK;
+	}
+};
+
 //Shows a dialog according to the passed flags (see definitions)
 LPWSTR showDialog(int flags, long types, long typec){
-	printf("%s\n", "A1");
 	LPWSTR path = NULL;
 	HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
 	if(SUCCEEDED(hr)){
@@ -37,62 +44,53 @@ LPWSTR showDialog(int flags, long types, long typec){
 			hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL, IID_IFileOpenDialog, reinterpret_cast<void**>(&dialog));
 		}
 
-		printf("%s\n", "A2");
 		if(SUCCEEDED(hr)){
-			if((flags & FOLDERS) > 0){
+			//if((flags & FOLDERS) > 0){
 				DWORD options;
 				if(SUCCEEDED(dialog->GetOptions(&options))){
+					if((flags & FOLDERS) > 0){
 					dialog->SetOptions(options | FOS_PICKFOLDERS);
+					} else if(typec != 0){
+						printf("Set strict\n");
+					}
 				}
-			}
+			//}
 			
 			if(typec != 0){
 				filters = (COMDLG_FILTERSPEC*)malloc(typec * sizeof(COMDLG_FILTERSPEC));
 				if(filters != NULL){
 					int idx = 0;
 					for(long i = 0; idx < typec; i++){
-						printf("loop %d - %d - %d/%d\n", i, idx, types, typec);
 						if((types & (1 << i)) != 0){
 							filters[idx++] = extensions[i].ext;
 						}
 					}
 					dialog->SetFileTypes(typec, filters);
+					hr = dialog->SetOptions(options | FOS_STRICTFILETYPES);
+					if(SUCCEEDED(hr)){
+						printf("The world has ended and windows lives\n");
+					}else{
+						printf("It is even worse\n");
+					}
 				}
 			}
+
+			//TODO pass as argument
+			//hr = dialog->SetFileName(L"test.png");
+
+			//TODO abstract only for save
+			//hr = dialog->Advise(, "TypeCheck");
+
+			//Force an extension, this being the default
+			dialog->SetDefaultExtension(L"png;");
 			
-			printf("This is a test string\n");
-			fflush(stdout);
 			hr = dialog->Show(NULL);
 			if(SUCCEEDED(hr)){
 				IShellItem *item;
 				hr = dialog->GetResult(&item);
 				if(SUCCEEDED(hr)){
-					printf("%s\n", "A4");
 					item->GetDisplayName(SIGDN_FILESYSPATH, &path);
 					item->Release();
-
-					UINT index;
-					hr = dialog->GetFileTypeIndex(&index);
-					printf("%u\n", index);
-					fflush(stdout);
-
-					//TODO
-					//path = (std::wstring(path) + L"." + std::wstring(extensions[index - 1].def)).c_str;
-					//std::wstring temp = std::wstring(path) + L"." + std::wstring(extensions[index - 1].def);
-					//path = &temp[0];
-
-					std::wstring temp = std::wstring(path) + L"." + std::wstring(extensions[index - 1].def);
-					path = &temp[0];
-
-					std::wcout << temp;
-					std::wcout << "\n";
-					fflush(stdout);
-
-					printf("Part 2\n");
-
-					std::wcout << path;
-					std::wcout << "\n";
-					fflush(stdout);
 				}
 			}
 			dialog->Release();
@@ -140,8 +138,8 @@ JNIEXPORT jstring JNICALL Java_me_roan_util_FileSelector_showNativeFolderOpen(JN
 }
 
 //Native subroutine for me.roan.util.FileSelector#showNativeFileSave
-JNIEXPORT jstring JNICALL Java_me_roan_util_FileSelector_showNativeFileSave(JNIEnv *env, jclass obj, jint types, jint typec){
-	return toString(env, showDialog(FILES | SAVE, types, typec));
+JNIEXPORT jstring JNICALL Java_me_roan_util_FileSelector_showNativeFileSave(JNIEnv *env, jclass obj, jint type){
+	return toString(env, showDialog(FILES | SAVE, type, type == 0 ? 0 : 1));
 }
 
 //Native subroutine for me.roan.util.FileSelector#registerFileExtension

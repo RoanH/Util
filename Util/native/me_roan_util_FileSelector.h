@@ -26,10 +26,10 @@ JNIEXPORT jstring JNICALL Java_me_roan_util_FileSelector_showNativeFolderOpen
 /*
  * Class:     me_roan_util_FileSelector
  * Method:    showNativeFileSave
- * Signature: (II)Ljava/lang/String;
+ * Signature: (I)Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL Java_me_roan_util_FileSelector_showNativeFileSave
-  (JNIEnv *, jclass, jint, jint);
+  (JNIEnv *, jclass, jint);
 
 /*
  * Class:     me_roan_util_FileSelector
