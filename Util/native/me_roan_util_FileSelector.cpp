@@ -66,7 +66,7 @@ LPWSTR showDialog(int flags, long types, long typec, LPWSTR fname){
 				}
 
 				if(fname != NULL){
-					dialog->SetFileName(L"test.png");
+					dialog->SetFileName(fname);
 				}
 
 				hr = dialog->Show(NULL);
@@ -124,8 +124,8 @@ JNIEXPORT jstring JNICALL Java_me_roan_util_FileSelector_showNativeFolderOpen(JN
 }
 
 //Native subroutine for me.roan.util.FileSelector#showNativeFileSave
-JNIEXPORT jstring JNICALL Java_me_roan_util_FileSelector_showNativeFileSave(JNIEnv *env, jclass obj, jint type){
-	return toString(env, showDialog(FILES | SAVE, type, type == 0 ? 0 : 1, NULL));//TODO
+JNIEXPORT jstring JNICALL Java_me_roan_util_FileSelector_showNativeFileSave(JNIEnv *env, jclass obj, jint type, jstring name){
+	return toString(env, showDialog(FILES | SAVE, type, type == 0 ? 0 : 1, (LPWSTR)env->GetStringChars(name, FALSE)));
 }
 
 //Native subroutine for me.roan.util.FileSelector#registerFileExtension

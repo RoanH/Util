@@ -85,7 +85,7 @@ public class FileSelector{
 	 */
 	public static final File showFileSaveDialog(){
 		if(initialised){
-			return toFile(showNativeFileSave(1));//XXX
+			return toFile(showNativeFileSave(1, "hello"));//XXX
 		}else{
 			chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 			while(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION){
@@ -133,7 +133,7 @@ public class FileSelector{
 	 * @return The file that was selected or
 	 *         <code>null</code> if no file was selected.
 	 */
-	private static native String showNativeFileSave(int type);
+	private static native String showNativeFileSave(int type, String name);
 	
 	private static native int registerNativeFileExtension(String desc, String filter, String extension);
 	
