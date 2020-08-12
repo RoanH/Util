@@ -57,6 +57,7 @@ LPWSTR showDialog(int flags, long types, long typec, LPWSTR fname){
 						for(long i = 0; idx < typec; i++){
 							if((types & (1 << i)) != 0){
 								filters[idx++] = extensions[i].ext;
+								dialog->SetDefaultExtension(extensions[i].def);
 							}
 						}
 						dialog->SetFileTypes(typec, filters);
@@ -64,11 +65,9 @@ LPWSTR showDialog(int flags, long types, long typec, LPWSTR fname){
 					}
 				}
 
-				//TODO pass as argument
-				//hr = dialog->SetFileName(L"test.png");
-
-				//Force an extension, this being the default
-				dialog->SetDefaultExtension(L"png");
+				if(fname != NULL){
+					dialog->SetFileName(L"test.png");
+				}
 
 				hr = dialog->Show(NULL);
 				if(SUCCEEDED(hr)){
