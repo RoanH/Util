@@ -195,7 +195,7 @@ public class Dialog{
 	 *         <code>null</code> is returned.
 	 */
 	public static final File showFileSaveDialog(){
-		return FileSelector.showFileSaveDialog();
+		return FileSelector.showFileSaveDialog(null, "test");//TODO
 	}
 	
 	/**

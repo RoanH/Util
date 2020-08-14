@@ -3,8 +3,6 @@
 #include <jni.h>
 #include <stdio.h>
 #include "me_roan_util_FileSelector.h"
-#include <sstream>
-#include <iostream>
 
 /**
  * Show a save dialog, mutually exclusive with OPEN.
@@ -54,7 +52,7 @@ int ext_num = 0;
  * @param typec Number of bits set in types.
  * @param fname Default save file name, NULL for an OPEN dialog.
  */
-LPWSTR showDialog(int flags, long types, long typec, LPWSTR fname){
+LPWSTR showDialog(int flags, jlong types, jint typec, LPWSTR fname){
 	LPWSTR path = NULL;
 	HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
 	if(SUCCEEDED(hr)){
@@ -77,8 +75,8 @@ LPWSTR showDialog(int flags, long types, long typec, LPWSTR fname){
 					filters = (COMDLG_FILTERSPEC*)malloc(typec * sizeof(COMDLG_FILTERSPEC));
 					if(filters != NULL){
 						int idx = 0;
-						for(long i = 0; idx < typec; i++){
-							if((types & (1 << i)) != 0){
+						for(jlong i = 0; idx < typec; i++){
+							if((types & (jlong(1) << i)) != 0){
 								filters[idx++] = extensions[i].ext;
 								dialog->SetDefaultExtension(extensions[i].def);
 							}
@@ -208,5 +206,5 @@ JNIEXPORT jlong JNICALL Java_me_roan_util_FileSelector_registerNativeFileExtensi
 	};
 	extensions[ext_num - 1].def = (LPWSTR)env->GetStringChars(name, FALSE);
 
-	return 1 << (ext_num - 1);
+	return jlong(1) << (ext_num - 1);
 }
