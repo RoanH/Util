@@ -6,21 +6,44 @@
 #include <sstream>
 #include <iostream>
 
-//Save dialog
+/**
+ * Show a save dialog, mutually exclusive with OPEN.
+ */
 #define SAVE 2
-//Open dialog
+/**
+ * Show an open dialog, mutually exclusive with SAVE.
+ */
 #define OPEN 4
-//File selection
+/**
+ * Selection of files, mutually exclusive with FOLDERS.
+ */
 #define FILES 8
-//Folder selection
+/**
+ * Selection of folders, mutually exclusive with FILES.
+ */
 #define FOLDERS 16
 
+/**
+ * Struct representing a registered file extension.
+ */
 typedef struct{
+	/**
+	 * File dialog filter.
+	 */
 	COMDLG_FILTERSPEC ext;
+	/**
+	 * Default extension to use in case the filter accepts multiple extensions.
+	 */
 	LPWSTR def;
 } FILE_TYPE;
 
+/**
+ * Array of registered extensions.
+ */
 FILE_TYPE *extensions;
+/**
+ * Number of registered extensions.
+ */
 int ext_num = 0;
 
 /**
@@ -71,7 +94,7 @@ LPWSTR showDialog(int flags, long types, long typec, LPWSTR fname){
 
 				hr = dialog->Show(NULL);
 				if(SUCCEEDED(hr)){
-					IShellItem* item;
+					IShellItem *item;
 					hr = dialog->GetResult(&item);
 					if(SUCCEEDED(hr)){
 						item->GetDisplayName(SIGDN_FILESYSPATH, &path);
@@ -89,7 +112,12 @@ LPWSTR showDialog(int flags, long types, long typec, LPWSTR fname){
 	return path;
 }
 
-//Converts a LPWSTR to a jstring using the given JNI environment
+/**
+ * Converts a LPWSTR to a jstring using the given JNI environment.
+ * @param env JNI environment.
+ * @param The LPWSTR to convert.
+ * @return The converted LPWSTR as a jstring.
+ */
 jstring toString(JNIEnv *env, LPWSTR data){
 	if(data == NULL){
 		return NULL;
@@ -113,23 +141,50 @@ jstring toString(JNIEnv *env, LPWSTR data){
 	}
 }
 
-//Native subroutine for me.roan.util.FileSelector#showNativeFileOpen
-JNIEXPORT jstring JNICALL Java_me_roan_util_FileSelector_showNativeFileOpen(JNIEnv *env, jclass obj, jint types, jint typec){
+/**
+ * Native subroutine for me.roan.util.FileSelector#showNativeFileOpen
+ * @param env JNI environment.
+ * @param obj Calling class.
+ * @param types Bitwise combination of file extension filter to enable.
+ * @param typec Number of bits set in 'types', if 0 then no filters will be used.
+ * @return The file path of the file to open.
+ */
+JNIEXPORT jstring JNICALL Java_me_roan_util_FileSelector_showNativeFileOpen(JNIEnv *env, jclass obj, jlong types, jint typec){
 	return toString(env, showDialog(FILES | OPEN, types, typec, NULL));
 }
 
-//Native subroutine for me.roan.util.FileSelector#showNativeFolderOpen
+/**
+ * Native subroutine for me.roan.util.FileSelector#showNativeFolderOpen
+ * @param env JNI environment.
+ * @param obj Calling class.
+ * @return The folder file path to open.
+ */
 JNIEXPORT jstring JNICALL Java_me_roan_util_FileSelector_showNativeFolderOpen(JNIEnv *env, jclass obj){
 	return toString(env, showDialog(FOLDERS | OPEN, 0, 0, NULL));
 }
 
-//Native subroutine for me.roan.util.FileSelector#showNativeFileSave
-JNIEXPORT jstring JNICALL Java_me_roan_util_FileSelector_showNativeFileSave(JNIEnv *env, jclass obj, jint type, jstring name){
+/**
+ * Native subroutine for me.roan.util.FileSelector#showNativeFileSave
+ * @param env JNI environment.
+ * @param obj Calling class.
+ * @param type The ID of the extension to use, 0 for no restriction.
+ * @param name The default name for the saved file.
+ * @return The file save location.
+ */
+JNIEXPORT jstring JNICALL Java_me_roan_util_FileSelector_showNativeFileSave(JNIEnv *env, jclass obj, jlong type, jstring name){
 	return toString(env, showDialog(FILES | SAVE, type, type == 0 ? 0 : 1, (LPWSTR)env->GetStringChars(name, FALSE)));
 }
 
-//Native subroutine for me.roan.util.FileSelector#registerFileExtension
-JNIEXPORT jint JNICALL Java_me_roan_util_FileSelector_registerNativeFileExtension(JNIEnv* env, jclass obj, jstring name, jstring ext, jstring def){
+/**
+ * Native subroutine for me.roan.util.FileSelector#registerFileExtension
+ * @param env JNI environment.
+ * @param obj Calling class.
+ * @param name Description of the extension to register.
+ * @param ext File extension filter string.
+ * @param def Default extension to use for files that match the filter.
+ * @return The ID of the newly registered extension.
+ */
+JNIEXPORT jlong JNICALL Java_me_roan_util_FileSelector_registerNativeFileExtension(JNIEnv* env, jclass obj, jstring name, jstring ext, jstring def){
 	if(ext_num == 0){
 		extensions = (FILE_TYPE*)malloc(sizeof(FILE_TYPE));
 		if(extensions == NULL){
@@ -153,5 +208,5 @@ JNIEXPORT jint JNICALL Java_me_roan_util_FileSelector_registerNativeFileExtensio
 	};
 	extensions[ext_num - 1].def = (LPWSTR)env->GetStringChars(name, FALSE);
 
-	return ext_num;
+	return 1 << (ext_num - 1);
 }

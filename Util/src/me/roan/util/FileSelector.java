@@ -8,8 +8,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Locale;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  * File chooser implementation that when
@@ -39,11 +42,17 @@ public class FileSelector{
 	 *         operation was cancelled 
 	 *         <code>null</code> is returned.
 	 */
-	public static final File showFileOpenDialog(){
+	public static final File showFileOpenDialog(FileExtension... extensions){
 		if(initialised){
+			
 			return toFile(showNativeFileOpen(0, 0));//XXX
 		}else{
 			chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			chooser.resetChoosableFileFilters();
+			for(FileExtension ext : extensions){
+				chooser.addChoosableFileFilter(ext.filter);
+			}
+			
 			if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION){
 				return chooser.getSelectedFile();
 			}else{
@@ -83,9 +92,9 @@ public class FileSelector{
 	 *         operation was cancelled 
 	 *         <code>null</code> is returned.
 	 */
-	public static final File showFileSaveDialog(){
+	public static final File showFileSaveDialog(FileExtension filter, String name){
 		if(initialised){
-			return toFile(showNativeFileSave(1, "hello"));//XXX
+			return toFile(showNativeFileSave(filter.nativeID, name));
 		}else{
 			chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 			while(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION){
@@ -113,29 +122,55 @@ public class FileSelector{
 	private static File toFile(String path){
 		return path == null ? null : new File(path);
 	}
-
+	
+	public static FileExtension registerFileExtension(String description, String... extensions){
+		if(extensions == null || extensions.length == 0){
+			throw new IllegalArgumentException("Extensions array cannot be empty or null.");
+		}
+		Objects.requireNonNull(description, "Description may not be null.");
+		
+		FileExtension ext = new FileExtension();
+		if(initialised){
+			StringJoiner joiner = new StringJoiner(";*.", "*.", "");
+			for(String extension : extensions){
+				if(extension == null || extension.trim().isEmpty()){
+					throw new IllegalArgumentException("Each extension must be non-null and non-empty.");
+				}
+				joiner.add(extension);
+			}
+			
+			ext.nativeID = registerNativeFileExtension(description, joiner.toString(), extensions[0]);
+			if(ext.nativeID == -1){
+				throw new IllegalStateException("Failed to register native extension.");
+			}
+		}else{
+			ext.filter = new FileNameExtensionFilter(description, extensions);
+		}
+		return ext;
+	}
+	
 	/**
 	 * Opens the native file open dialog.
 	 * @return The file that was selected or
 	 *         <code>null</code> if no file was selected.
 	 */
-	private static native String showNativeFileOpen(int types, int typec);
+	private static synchronized native String showNativeFileOpen(long types, int typec);
 	
 	/**
 	 * Opens the native folder open dialog.
 	 * @return The folder that was selected or
 	 *         <code>null</code> if no folder was selected.
 	 */
-	private static native String showNativeFolderOpen();
+	private static synchronized native String showNativeFolderOpen();
 	
 	/**
 	 * Opens the native file save dialog.
 	 * @return The file that was selected or
 	 *         <code>null</code> if no file was selected.
 	 */
-	private static native String showNativeFileSave(int type, String name);
+	private static synchronized native String showNativeFileSave(long type, String name);
 	
-	private static native int registerNativeFileExtension(String desc, String filter, String extension);
+	private static synchronized native long registerNativeFileExtension(String desc, String filter, String extension);
 	
 	static{
 		initialised = false;
@@ -175,12 +210,20 @@ public class FileSelector{
 	}
 	
 	public static void main(String[] args) throws InterruptedException{
-		int png = registerNativeFileExtension("Images", "*.png;*.jpg", "png");
-		int ini = registerNativeFileExtension("Ini", "*.ini", "ini");
+		long png = registerNativeFileExtension("Images", "*.png;*.jpg", "png");
+		long ini = registerNativeFileExtension("Ini", "*.ini", "ini");
 		//registerNativeFileExtension("Png", "*.png", "png");
 		//String out = showNativeFileOpen(1, png);
-		File out = showFileSaveDialog();
-		System.out.println("Returned:" + out);
+		//File out = showFileSaveDialog();
+		//System.out.println("Returned:" + out);
 		Thread.sleep(10000);
+	}
+	
+	public static final class FileExtension{
+		private long nativeID;
+		private FileNameExtensionFilter filter;
+		
+		private FileExtension(){
+		}
 	}
 }
