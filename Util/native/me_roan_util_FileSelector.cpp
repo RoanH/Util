@@ -1,7 +1,6 @@
 #include <windows.h>
 #include <shobjidl.h>
 #include <jni.h>
-#include <stdio.h>
 #include "me_roan_util_FileSelector.h"
 
 /**
