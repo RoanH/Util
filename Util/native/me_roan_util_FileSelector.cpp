@@ -50,6 +50,7 @@ int ext_num = 0;
  * @param types Bitwise combination of file extension filters to enable.
  * @param typec Number of bits set in types.
  * @param fname Default save file name, NULL for an OPEN dialog.
+ * @return The path to the selected file or folder.
  */
 LPWSTR showDialog(int flags, jlong types, jint typec, LPWSTR fname){
 	LPWSTR path = NULL;
@@ -121,6 +122,7 @@ jstring toString(JNIEnv *env, LPWSTR data){
 	}else{
 		int len = WideCharToMultiByte(CP_UTF8, 0, data, -1, NULL, 0, NULL, NULL);
 		if(len == 0){
+			CoTaskMemFree(data);
 			return NULL;
 		}
 
@@ -128,6 +130,8 @@ jstring toString(JNIEnv *env, LPWSTR data){
 
 		len = WideCharToMultiByte(CP_UTF8, 0, data, -1, utf8, len, NULL, NULL);
 		if(len == 0){
+			CoTaskMemFree(data);
+			free(utf8);
 			return NULL;
 		}
 
