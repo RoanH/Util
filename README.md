@@ -10,7 +10,7 @@ repositories{
 }
 
 dependencies{
-	implementation 'com.github.RoanH:Util:v1.3'
+	implementation 'com.github.RoanH:Util:v1.4'
 }
 ```
 
