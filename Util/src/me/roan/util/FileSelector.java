@@ -17,7 +17,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 /**
  * File chooser implementation that when
  * possible shows the new style Windows
- * file selector and other falls back
+ * file selector and otherwise falls back
  * to the Swing file chooser.
  * @author Roan
  * @see JFileChooser
@@ -36,11 +36,14 @@ public class FileSelector{
 	
 	/**
 	 * Opens a file open dialog.
+	 * @param extensions The file extension filters to use. If none
+	 *        are provided then any extension is allowed.
 	 * @return The file that was selected,
-	 *         this file may or may not actually
-	 *         exist on the file system. If the
+	 *         this file will exist on the 
+	 *         file system. If the
 	 *         operation was cancelled 
 	 *         <code>null</code> is returned.
+	 * @see #registerFileExtension(String, String...)
 	 */
 	public static final File showFileOpenDialog(FileExtension... extensions){
 		Objects.requireNonNull(extensions, "The extensions array cannot be null.");
@@ -74,8 +77,8 @@ public class FileSelector{
 	/**
 	 * Opens a folder open dialog.
 	 * @return The folder that was selected,
-	 *         this folder may or may not actually
-	 *         exist on the file system. If the
+	 *         this folder will exist on the 
+	 *         file system. If the
 	 *         operation was cancelled 
 	 *         <code>null</code> is returned.
 	 */
@@ -100,6 +103,8 @@ public class FileSelector{
 	
 	/**
 	 * Opens a file save dialog.
+	 * @param filter The file extension to enforce.
+	 * @param name The initial name shown to save the file as.
 	 * @return The file that was selected,
 	 *         this file may or may not actually
 	 *         exist on the file system. If the
@@ -107,6 +112,7 @@ public class FileSelector{
 	 *         agreed to overwrite it. If the
 	 *         operation was cancelled 
 	 *         <code>null</code> is returned.
+	 * @see #registerFileExtension(String, String...)
 	 */
 	public static final File showFileSaveDialog(FileExtension filter, String name){
 		Objects.requireNonNull(name, "Provided default cannot be null.");
@@ -157,6 +163,16 @@ public class FileSelector{
 		return path == null ? null : new File(path);
 	}
 	
+	/**
+	 * Registers a new file extension for use as
+	 * extension filter in the file selector.
+	 * @param description The description of the extension.
+	 * @param extensions The extensions matched by the extension
+	 *        filter. The extensions should not include the period
+	 *        before their name.
+	 * @return The newly registered file extension.
+	 * @see FileExtension
+	 */
 	public static FileExtension registerFileExtension(String description, String... extensions){
 		if(extensions == null || extensions.length == 0){
 			throw new IllegalArgumentException("Extensions array cannot be empty or null.");
@@ -185,6 +201,9 @@ public class FileSelector{
 	
 	/**
 	 * Opens the native file open dialog.
+	 * @param types The bitwise combination of the IDs of all the
+	 *        registered file extension filters that should be enabled.
+	 * @param typec The number of bits set in <code>types</code>.
 	 * @return The file that was selected or
 	 *         <code>null</code> if no file was selected.
 	 */
@@ -199,11 +218,22 @@ public class FileSelector{
 	
 	/**
 	 * Opens the native file save dialog.
+	 * @param type The ID of the file extension filter to enable, if
+	 *        0 then any file extension will be allowed for saving.
+	 * @param name The initial suggested save file name.
 	 * @return The file that was selected or
 	 *         <code>null</code> if no file was selected.
 	 */
 	private static synchronized native String showNativeFileSave(long type, String name);
 	
+	/**
+	 * Registers a new native extension.
+	 * @param desc The description for the extension.
+	 * @param filter The filter string to use for the extension.
+	 * @param extension The default extension to use for files
+	 *        used under the extension.
+	 * @return The ID of the newly registered extension.
+	 */
 	private static synchronized native long registerNativeFileExtension(String desc, String filter, String extension);
 	
 	static{
@@ -244,33 +274,26 @@ public class FileSelector{
 		}
 	}
 	
-	public static void main(String[] args) throws InterruptedException{
-		//long png = registerNativeFileExtension("Images", "*.png;*.jpg", "png");
-		//long ini = registerNativeFileExtension("Ini", "*.ini", "ini");
-		//registerNativeFileExtension("Png", "*.png", "png");
-		//String out = showNativeFileOpen(1, png);
-		//File out = showFileSaveDialog();
-		//System.out.println("Returned:" + out);
-		
-		
-		
-
-		chooser = new JFileChooser();
-		initialised = false;
-				
-		FileExtension e01 = registerFileExtension("Ext 1", "png", "jpg");		
-		
-		File f = showFileSaveDialog(null, "test");
-		
-		
-		System.out.println(f);
-		Thread.sleep(10000);
-	}
-	
+	/**
+	 * Registration of a file extension that can be used
+	 * to restrict the type of a saved file and restrict
+	 * which files can be opened.
+	 * @author Roan
+	 * @see FileSelector#registerFileExtension(String, String...)
+	 */
 	public static final class FileExtension{
+		/**
+		 * The native ID of the registed extension.
+		 */
 		private long nativeID;
+		/**
+		 * The Swing extension filter for this extension.
+		 */
 		private FileNameExtensionFilter filter;
 		
+		/**
+		 * Constructs a new FileExtension.
+		 */
 		private FileExtension(){
 		}
 	}
