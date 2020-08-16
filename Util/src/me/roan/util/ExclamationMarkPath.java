@@ -97,7 +97,7 @@ public class ExclamationMarkPath{
 			"It seems that the current location for the program has a directory whose name ends with\n"
 			+ "an exclamation mark (!) on its path. Unfortunately due to a JDK Bug (one reported in August 2000)\n"
 			+ "this will make the program not work correctly.\n\n"
-			+ "The easiest way to solve this issue is to simple move the program\n"
+			+ "The easiest way to solve this issue is to simply move the program\n"
 			+ "or rename the directory whose name ends with an exclamation mark.\n\n"
 			+ "If for some reason neither is an option the program can try to start itself from the temp directory\n"
 			+ "by clicking the button on this dialog.\n\n"
