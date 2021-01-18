@@ -270,7 +270,6 @@ public class FileSelector{
 		
 		if(!initialised){
 			chooser = new JFileChooser();
-		}else{
 		}
 	}
 	
