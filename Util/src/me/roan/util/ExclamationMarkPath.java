@@ -13,7 +13,7 @@ import java.security.CodeSource;
  * Currently as of writing this class there is a bug in the JDK where
  * a program cannot correctly read resources from its JAR if it is
  * located on a path where the name of one of the directories ends with
- * an exclamation mark <tt>(!)</tt>. This bug has been reported a number
+ * an exclamation mark <code>(!)</code>. This bug has been reported a number
  * of times with the first report I could find being from the 9th of 
  * August, 2000 (see links below). 
  * <p>
@@ -52,7 +52,7 @@ public class ExclamationMarkPath{
 	 * doing anything.
 	 * @param args Command line arguments that the program
 	 *        was started with. If the last argument is
-	 *        equal to <tt>-relaunch</tt> the warning
+	 *        equal to <code>-relaunch</code> the warning
 	 *        dialog is skipped and the program is immediately
 	 *        relaunched from the temporary directory.
 	 */
@@ -71,7 +71,7 @@ public class ExclamationMarkPath{
 	 *        temporary directory.
 	 * @param args Command line arguments that the program
 	 *        was started with. If the last argument is
-	 *        equal to <tt>-relaunch</tt> the warning
+	 *        equal to <code>-relaunch</code> the warning
 	 *        dialog is skipped and the program is immediately
 	 *        relaunched from the temporary directory.
 	 */
@@ -143,7 +143,7 @@ public class ExclamationMarkPath{
 
 	/**
 	 * Re-launches the program from the temp directory
-	 * if the program path contains a <tt>(!)</tt> this
+	 * if the program path contains a <code>(!)</code> this
 	 * fixes the JDK bug. If this subroutine managed to
 	 * execute properly the call to this subroutine will
 	 * never return.
@@ -213,7 +213,7 @@ public class ExclamationMarkPath{
 	/**
 	 * Checks if any folder on the path to the
 	 * given file ends with an exclamation mark 
-	 * <tt>(!)</tt>.
+	 * <code>(!)</code>.
 	 * @param file The file to check the path of.
 	 * @return True if an exclamation mark was
 	 *         found on the path for the given file.
