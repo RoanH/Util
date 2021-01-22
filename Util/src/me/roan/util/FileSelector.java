@@ -282,7 +282,7 @@ public class FileSelector{
 	 */
 	public static final class FileExtension{
 		/**
-		 * The native ID of the registed extension.
+		 * The native ID of the registered extension.
 		 */
 		private long nativeID;
 		/**
