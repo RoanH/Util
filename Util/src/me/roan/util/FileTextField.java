@@ -11,7 +11,6 @@ import java.awt.dnd.DropTargetListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.function.Consumer;
 
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
@@ -29,7 +28,7 @@ public class FileTextField extends JTextField implements DropTargetListener, Doc
 	/**
 	 * Consumer that gets notified when the selected folder or file changes.
 	 */
-	private Consumer<String> listener;
+	private FileChangeListener listener;
 
 	/**
 	 * Constructs a new file text field.
@@ -44,7 +43,7 @@ public class FileTextField extends JTextField implements DropTargetListener, Doc
 	 * @param listener The listener to call
 	 *        when the field content changes.
 	 */
-	public FileTextField(Consumer<String> listener){
+	public FileTextField(FileChangeListener listener){
 		this.getDocument().addDocumentListener(this);
 		new DropTarget(this, this);
 		setListener(listener);
@@ -55,18 +54,18 @@ public class FileTextField extends JTextField implements DropTargetListener, Doc
 	 * @param listener The listener to send selection
 	 *        changes to (can be <code>null</code>).
 	 */
-	public void setListener(Consumer<String> listener){
+	public void setListener(FileChangeListener listener){
 		this.listener = listener;
 	}
 	
 	/**
 	 * Sends a content update to the
 	 * listener if one is set.
-	 * @see #setListener(Consumer)
+	 * @see #setListener(FileChangeListener)
 	 */
 	private void update(){
 		if(listener != null){
-			listener.accept(getText());
+			listener.onContentChange(getText());
 		}
 	}
 	
@@ -123,5 +122,20 @@ public class FileTextField extends JTextField implements DropTargetListener, Doc
 				//Pity, but not important
 			}
 		}
+	}
+	
+	/**
+	 * Listener called when the file text field content changes.
+	 * @author Roan
+	 */
+	@FunctionalInterface
+	public static abstract interface FileChangeListener{
+		
+		/**
+		 * Called when the field content changes. The new
+		 * content does not need to be a valid file path.
+		 * @param content The new field content.
+		 */
+		public abstract void onContentChange(String content);
 	}
 }
