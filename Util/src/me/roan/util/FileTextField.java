@@ -76,6 +76,14 @@ public class FileTextField extends JTextField implements DropTargetListener, Doc
 	public File getFile(){
 		return new File(getText());
 	}
+	
+	/**
+	 * Sets the file or folder to display.
+	 * @param file The selected file or folder.
+	 */
+	public void setFile(File file){
+		setText(file.getAbsolutePath());
+	}
 
 	@Override
 	public void insertUpdate(DocumentEvent e){
