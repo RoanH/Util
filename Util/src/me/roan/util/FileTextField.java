@@ -17,30 +17,65 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+/**
+ * Text field that supports drag and drop events for files.
+ * @author Roan
+ */
 public class FileTextField extends JTextField implements DropTargetListener, DocumentListener{
 	/**
 	 * Serial ID.
 	 */
 	private static final long serialVersionUID = 5787255014444489626L;
+	/**
+	 * Consumer that gets notified when the selected folder or file changes.
+	 */
 	private Consumer<String> listener;
 
+	/**
+	 * Constructs a new file text field.
+	 */
 	public FileTextField(){
 		this(null);
 	}
 	
+	/**
+	 * Constructs a new file text field with
+	 * the given listener.
+	 * @param listener The listener to call
+	 *        when the field content changes.
+	 */
 	public FileTextField(Consumer<String> listener){
 		this.getDocument().addDocumentListener(this);
 		new DropTarget(this, this);
+		setListener(listener);
 	}
 	
-	public void setChangeListener(Consumer<String> listener){
+	/**
+	 * Sets the listener to send selection updates to.
+	 * @param listener The listener to send selection
+	 *        changes to (can be <code>null</code>).
+	 */
+	public void setListener(Consumer<String> listener){
 		this.listener = listener;
 	}
 	
+	/**
+	 * Sends a content update to the
+	 * listener if one is set.
+	 * @see #setListener(Consumer)
+	 */
 	private void update(){
 		if(listener != null){
-			listener.accept(this.getText());
+			listener.accept(getText());
 		}
+	}
+	
+	/**
+	 * Gets the content of this text field as a file.
+	 * @return The content of this text field as a file.
+	 */
+	public File getFile(){
+		return new File(getText());
 	}
 
 	@Override
