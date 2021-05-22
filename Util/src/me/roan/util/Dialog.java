@@ -2,7 +2,7 @@ package me.roan.util;
 
 import java.awt.Image;
 import java.io.File;
-
+import javax.swing.ActionMap;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -149,6 +149,8 @@ public class Dialog{
 	 */
 	public static final int showDialog(Object form, boolean resizable, String[] options){
 		JOptionPane optionPane = new JOptionPane(form, JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, 0);
+		optionPane.setActionMap(new ActionMap());
+		
 		JDialog dialog = optionPane.createDialog(getParentFrame(), title);
 		dialog.setResizable(resizable);
 		dialog.setIconImage(icon);
