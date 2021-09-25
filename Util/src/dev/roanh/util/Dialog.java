@@ -36,10 +36,6 @@ public class Dialog{
 		parentFrame = parent;
 	}
 	
-	public static void main(String[] args){
-		Dialog.showFileSaveDialog("t");
-	}
-	
 	/**
 	 * Sets the window icon for the dialog windows.
 	 * @param icon The dialog icon.
