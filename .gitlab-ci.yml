@@ -51,7 +51,6 @@ javadoc:
     - ./gradlew javadoc
     - mv ./build/docs/javadoc/* ../javadoc
   stage: javadoc
-  environment: javadoc
   artifacts:
     name: "$PROJECTNAME"
     expire_in: 1 week
@@ -63,7 +62,6 @@ compile:
     - ./gradlew jar
     - mv ./build/libs/* ../
   stage: compile
-  environment: builds
   artifacts:
     name: "${PROJECTNAME}"
     expire_in: 1 week
