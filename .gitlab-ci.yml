@@ -70,7 +70,10 @@ compile:
       
 publish:
   script:
-    - ./gradlew -PnexusPublic=${NEXUS_PUBLIC} -PnexusReleases=${NEXUS_RELEASES} -PnexusSnapshots=${NEXUS_SNAPSHOTS} -PmavenUser=ci -PmavenPassword=${MAVEN_PASSWORD} publishAllPublicationsToMavenRepository
-  only: 
-    - tags
+    - ./gradlew publishToMavenLocal
+#    - ./gradlew -PnexusPublic=${NEXUS_PUBLIC} -PnexusReleases=${NEXUS_RELEASES} -PnexusSnapshots=${NEXUS_SNAPSHOTS} -PmavenUser=ci -PmavenPassword=${MAVEN_PASSWORD} publishAllPublicationsToMavenRepository
+#  only: 
+#    - tags
+  when: manual
+  allow_failure: false
   stage: publishing
