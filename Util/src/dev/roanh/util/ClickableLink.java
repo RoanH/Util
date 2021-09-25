@@ -1,4 +1,4 @@
-package me.roan.util;
+package dev.roanh.util;
 
 import java.awt.Desktop;
 import java.awt.event.MouseEvent;

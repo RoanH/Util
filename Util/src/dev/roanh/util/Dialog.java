@@ -1,4 +1,4 @@
-package me.roan.util;
+package dev.roanh.util;
 
 import java.awt.Image;
 import java.io.File;
@@ -7,7 +7,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import me.roan.util.FileSelector.FileExtension;
+import dev.roanh.util.FileSelector.FileExtension;
 
 /**
  * Utility class for showing often
@@ -34,6 +34,10 @@ public class Dialog{
 	 */
 	public static final void setParentFrame(JFrame parent){
 		parentFrame = parent;
+	}
+	
+	public static void main(String[] args){
+		Dialog.showFileSaveDialog("t");
 	}
 	
 	/**

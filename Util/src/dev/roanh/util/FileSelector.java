@@ -1,4 +1,4 @@
-package me.roan.util;
+package dev.roanh.util;
 
 import java.io.File;
 import java.io.IOException;
@@ -242,7 +242,7 @@ public class FileSelector{
 		if(System.getProperty("os.name").toLowerCase(Locale.ROOT).contains("windows")){
 			String arch = System.getProperty("os.arch");
 			if(arch.equals("amd64") || arch.equals("x86")){
-				try(InputStream in = ClassLoader.getSystemResourceAsStream("me/roan/util/lib/" + arch + "/Util.dll")){
+				try(InputStream in = ClassLoader.getSystemResourceAsStream("dev/roanh/util/lib/" + arch + "/Util.dll")){
 					if(in != null){
 						Path tmp = Files.createTempFile("Util", ".dll");
 						tmp.toFile().deleteOnExit();

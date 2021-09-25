@@ -129,10 +129,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\me_roan_util_FileSelector.h" />
+    <ClInclude Include="..\dev_roanh_util_FileSelector.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\me_roan_util_FileSelector.cpp" />
+    <ClCompile Include="..\dev_roanh_util_FileSelector.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
