@@ -72,6 +72,6 @@ publishing{
 }
 
 signing{
-	useInMemoryPgpKeys(findProperty("signingKey"), findProperty("signingPassword"))
+	useInMemoryPgpKeys(findProperty("signingKeyId"), findProperty("signingKey"), findProperty("signingPassword"))
 	sign publishing.publications.mavenJava
 }
