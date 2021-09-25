@@ -201,7 +201,7 @@ public class Dialog{
 	 *         agreed to overwrite it. If the
 	 *         operation was cancelled 
 	 *         <code>null</code> is returned.
-	 * @see #showFileSaveDialog(FileExtension, String)
+	 * @see Dialog#showFileSaveDialog(FileExtension, String)
 	 * @see FileSelector#registerFileExtension(String, String...)
 	 */
 	public static final File showFileSaveDialog(String name){
@@ -219,7 +219,7 @@ public class Dialog{
 	 *         agreed to overwrite it. If the
 	 *         operation was cancelled 
 	 *         <code>null</code> is returned.
-	 * @see #showFileSaveDialog(String)
+	 * @see Dialog#showFileSaveDialog(String)
 	 * @see FileSelector#registerFileExtension(String, String...)
 	 */
 	public static final File showFileSaveDialog(FileExtension extension, String name){
