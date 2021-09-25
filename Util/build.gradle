@@ -30,7 +30,7 @@ compileJava.options.encoding = 'UTF-8'
 sourceCompatibility = 1.8
 
 group = 'dev.roanh.util'
-version = System.getenv("VERSION") ?: '1.4-SNAPSHOT'
+version = System.getenv("VERSION") ? System.getenv("VERSION").substring(1) : '2.0-SNAPSHOT'
 
 publishing{
 	publications{
