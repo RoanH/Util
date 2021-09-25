@@ -3,6 +3,7 @@ plugins{
 	id 'java-library'
 	id 'maven-publish'
 	id 'eclipse'
+	id 'signing'
 }
 
 sourceSets{
@@ -28,13 +29,13 @@ javadoc{
 compileJava.options.encoding = 'UTF-8'
 sourceCompatibility = 1.8
 
-group = 'com.github.RoanH'
-version = System.getenv("VERSION") ?: '1.4-SNAPSHOT'
+group = 'dev.roanh.util'
+version = System.getenv("VERSION") ? System.getenv("VERSION").substring(1) : '2.0-SNAPSHOT'
 
 publishing{
 	publications{
-		nexus(MavenPublication){
-			artifactId = 'Util'
+		mavenJava(MavenPublication){
+			artifactId = 'util'
 			from components.java
 		
 			pom{
@@ -51,12 +52,12 @@ publishing{
 					developer{
 						id = 'RoanH'
 						name = 'Roan Hofland'
-						email = 'roan.hofland@hotmail.com'
+						email = 'roan@roanh.com'
 					}
 				}
 				scm{
 					connection = 'scm:git:git@github.com:RoanH/Util.git'
-					developerConnection = 'scm:git:git@github.com:RoanH/Util.git'
+					developerConnection = 'scm:git:git@git.roanh.dev:roan/util.git'
 					url = 'https://github.com/RoanH/Util'
 				}
 			}
@@ -64,14 +65,17 @@ publishing{
 	}
 	
 	repositories{
-		if(project.hasProperty("mavenPassword")){
-			maven{
-				url version.endsWith('SNAPSHOT') ? "$nexusSnapshots" : "$nexusReleases"
-				credentials{
-					username "$mavenUser"
-					password "$mavenPassword"
-				}
+		maven{
+			url "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+			credentials{
+				username findProperty("OSSRH_USER")
+				password findProperty("OSSRH_PASS")
 			}
 		}
 	}
+}
+
+signing{
+	useInMemoryPgpKeys(findProperty("signingKeyId"), findProperty("signingKey"), findProperty("signingPassword"))
+	sign publishing.publications.mavenJava
 }
