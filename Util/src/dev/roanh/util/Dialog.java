@@ -193,23 +193,6 @@ public class Dialog{
 	
 	/**
 	 * Opens a file save dialog.
-	 * @param name The initial name shown to save the file as.
-	 * @return The file that was selected,
-	 *         this file may or may not actually
-	 *         exist on the file system. If the
-	 *         file exists the user has already
-	 *         agreed to overwrite it. If the
-	 *         operation was cancelled 
-	 *         <code>null</code> is returned.
-	 * @see Dialog#showFileSaveDialog(FileExtension, String)
-	 * @see FileSelector#registerFileExtension(String, String...)
-	 */
-	public static final File showFileSaveDialog(String name){
-		return showFileSaveDialog(null, name);
-	}
-	
-	/**
-	 * Opens a file save dialog.
 	 * @param extension The file extension to enforce.
 	 * @param name The initial name shown to save the file as.
 	 * @return The file that was selected,
@@ -219,11 +202,28 @@ public class Dialog{
 	 *         agreed to overwrite it. If the
 	 *         operation was cancelled 
 	 *         <code>null</code> is returned.
-	 * @see Dialog#showFileSaveDialog(String)
+	 * @see #showFileSaveDialog(String)
 	 * @see FileSelector#registerFileExtension(String, String...)
 	 */
 	public static final File showFileSaveDialog(FileExtension extension, String name){
 		return FileSelector.showFileSaveDialog(extension, name);
+	}
+	
+	/**
+	 * Opens a file save dialog.
+	 * @param name The initial name shown to save the file as.
+	 * @return The file that was selected,
+	 *         this file may or may not actually
+	 *         exist on the file system. If the
+	 *         file exists the user has already
+	 *         agreed to overwrite it. If the
+	 *         operation was cancelled 
+	 *         <code>null</code> is returned.
+	 * @see #showFileSaveDialog(FileExtension, String)
+	 * @see FileSelector#registerFileExtension(String, String...)
+	 */
+	public static final File showFileSaveDialog(String name){
+		return showFileSaveDialog(null, name);
 	}
 	
 	/**
