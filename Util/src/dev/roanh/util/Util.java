@@ -54,23 +54,41 @@ public class Util{
 	 * @see #getVersionLabel(String, String)
 	 */
 	public static JLabel getVersionLabel(String repository, String currentVersion, boolean italics, int alignment){
+		return getVersionLabel("RoanH", repository, currentVersion, italics, alignment);
+	}
+	
+	/**
+	 * Gets a version label that automatically updates
+	 * with the latest version after some time.
+	 * @param user The user that owns the repository.
+	 * @param repository The repository to check the version for.
+	 * @param currentVersion The current version of the software.
+	 * @param italics Whether or not to display the
+	 *        text in italics.
+	 * @param alignment The text alignment inside the label.
+	 * @return An automatically updating label with the
+	 *         latest version.
+	 * @see SwingConstants
+	 * @see #getVersionLabel(String, String)
+	 */
+	public static JLabel getVersionLabel(String user, String repository, String currentVersion, boolean italics, int alignment){
 		JLabel ver = new JLabel(String.format(italics ? VERSION_FORMAT_ITALICS : VERSION_FORMAT, currentVersion, "<i><font color=gray>loading</font></i>"), alignment);
 		new Thread(()->{
-			String version = checkVersion(repository);
+			String version = checkVersion(user, repository);
 			ver.setText(String.format(italics ? VERSION_FORMAT_ITALICS : VERSION_FORMAT, currentVersion, version == null ? "unknown :(" : version));
 		}, "Version Checker").start();
 		return ver;
 	}
 	
 	/**
-	 * Checks the version to see
-	 * if we are running the latest version
-	 * @param repository The repository to check in
-	 * @return The latest version
+	 * Checks the version to see if we are running the latest version.
+	 * @param user The user that owns the repository.
+	 * @param repository The repository to check in.
+	 * @return The latest version.
 	 */
-	public static final String checkVersion(String repository){
+	public static final String checkVersion(String user, String repository){
 		try{
-			HttpURLConnection con = (HttpURLConnection)new URL("https://api.github.com/repos/RoanH/" + repository + "/tags").openConnection();
+			HttpURLConnection con = (HttpURLConnection)new URL("https://api.github.com/repos/" + user + "/" + repository + "/tags").openConnection();
 			con.setRequestMethod("GET");
 			con.addRequestProperty("Accept", "application/vnd.github.v3+json");
 			con.setConnectTimeout(10000);
