@@ -166,7 +166,7 @@ public class FileSelector{
 	/**
 	 * Registers a new file extension for use as
 	 * extension filter in the file selector. Note that
-	 * only a maximum of 63 native file extensions can be registered.
+	 * only a maximum of 64 native file extensions can be registered.
 	 * @param description The description of the extension.
 	 * @param extensions The extensions matched by the extension
 	 *        filter. The extensions should not include the period

@@ -202,7 +202,6 @@ public class Dialog{
 	 *         operation was cancelled 
 	 *         <code>null</code> is returned.
 	 * @see #showFileSaveDialog(FileExtension, String)
-	 * @see FileSelector#registerFileExtension(String, String...)
 	 */
 	public static final File showFileSaveDialog(String name){
 		return showFileSaveDialog(null, name);
