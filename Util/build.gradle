@@ -52,7 +52,7 @@ publishing{
 					developer{
 						id = 'RoanH'
 						name = 'Roan Hofland'
-						email = 'roan@roanh.com'
+						email = 'roan@roanh.dev'
 					}
 				}
 				scm{
