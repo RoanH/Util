@@ -201,7 +201,6 @@ public class Dialog{
 	 *         agreed to overwrite it. If the
 	 *         operation was cancelled 
 	 *         <code>null</code> is returned.
-	 * @see #showFileSaveDialog(FileExtension, String)
 	 */
 	public static final File showFileSaveDialog(String name){
 		return showFileSaveDialog(null, name);
