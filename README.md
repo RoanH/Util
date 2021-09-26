@@ -1,16 +1,16 @@
 # Util
-Utilities for public projects. I mainly use this repository to implement features to all of my projects at the same time. You're free to use this as a dependency for your own project.
+Utilities for public projects. I mainly use this repository to implement features to all of my projects at the same time. You're free to use this as a dependency for your own project. Currently the most interesting feature is being able to use the modern style Windows file chooser that normally isn't available in Swing.
 
-### Gradle
+Documentation can be found at: https://util.docs.roanh.dev/
+
+### Gradle [![Maven Central](https://img.shields.io/maven-central/v/dev.roanh.util/util)](https://mvnrepository.com/artifact/dev.roanh.util/util)
 ```groovy
 repositories{
-	maven{
-		url "https://jitpack.io"
-	}
+	mavenCentral()
 }
 
 dependencies{
-	implementation 'com.github.RoanH:Util:v1.6'
+	implementation 'dev.roanh.util:util:2.0'
 }
 ```
 
