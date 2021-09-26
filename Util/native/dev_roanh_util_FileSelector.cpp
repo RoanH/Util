@@ -183,7 +183,8 @@ JNIEXPORT jstring JNICALL Java_dev_roanh_util_FileSelector_showNativeFileSave(JN
  * @param name Description of the extension to register.
  * @param ext File extension filter string.
  * @param def Default extension to use for files that match the filter.
- * @return The ID of the newly registered extension.
+ * @return The ID of the newly registered extension or -1 when an exception
+ *         occurred, or -2 when the maximum number (64) of extensions was reached.
  */
 JNIEXPORT jlong JNICALL Java_dev_roanh_util_FileSelector_registerNativeFileExtension(JNIEnv* env, jclass obj, jstring name, jstring ext, jstring def){
 	if(ext_num == 0){
@@ -193,6 +194,8 @@ JNIEXPORT jlong JNICALL Java_dev_roanh_util_FileSelector_registerNativeFileExten
 		}else{
 			ext_num = 1;
 		}
+	}else if(ext_num == 64){
+		return -2;
 	}else{
 		ext_num++;
 		FILE_TYPE *new_extensions = (FILE_TYPE*)realloc(extensions, ext_num * sizeof(FILE_TYPE));

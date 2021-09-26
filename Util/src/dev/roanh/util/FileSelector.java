@@ -165,15 +165,21 @@ public class FileSelector{
 	
 	/**
 	 * Registers a new file extension for use as
-	 * extension filter in the file selector.
+	 * extension filter in the file selector. Note that
+	 * only a maximum of 63 native file extensions can be registered.
 	 * @param description The description of the extension.
 	 * @param extensions The extensions matched by the extension
 	 *        filter. The extensions should not include the period
 	 *        before their name.
 	 * @return The newly registered file extension.
+	 * @throws NullPointerException When the given description is <code>null</code>.
+	 * @throws IllegalArgumentException When one of the extensions is invalid.
+	 * @throws TooManyExtensionsException When an attempt is made to register more
+	 *         than 64 native file extensions.
+	 * @throws IllegalStateException When registering the native file extension failed.
 	 * @see FileExtension
 	 */
-	public static FileExtension registerFileExtension(String description, String... extensions){
+	public static FileExtension registerFileExtension(String description, String... extensions) throws NullPointerException, IllegalArgumentException, TooManyExtensionsException, IllegalStateException{
 		if(extensions == null || extensions.length == 0){
 			throw new IllegalArgumentException("Extensions array cannot be empty or null.");
 		}
@@ -192,6 +198,8 @@ public class FileSelector{
 			ext.nativeID = registerNativeFileExtension(description, joiner.toString(), extensions[0]);
 			if(ext.nativeID == -1){
 				throw new IllegalStateException("Failed to register native extension.");
+			}else if(ext.nativeID == -2){
+				throw new TooManyExtensionsException();
 			}
 		}else{
 			ext.filter = new FileNameExtensionFilter(description, extensions);
@@ -294,6 +302,27 @@ public class FileSelector{
 		 * Constructs a new FileExtension.
 		 */
 		private FileExtension(){
+		}
+	}
+	
+	/**
+	 * Exception that is thrown when an attempt is made
+	 * to register more than the maximum of 64 native
+	 * file extensions.
+	 * @author Roan
+	 * @see FileSelector#registerFileExtension(String, String...)
+	 */
+	public static final class TooManyExtensionsException extends RuntimeException{
+		/**
+		 * Serial ID.
+		 */
+		private static final long serialVersionUID = 5228035256972704523L;
+
+		/**
+		 * Constructs a new too many extensions exception.
+		 */
+		private TooManyExtensionsException(){
+			super("Can only register a maximum of 64 native file extensions.");
 		}
 	}
 }
