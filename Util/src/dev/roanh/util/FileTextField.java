@@ -10,6 +10,8 @@ import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import javax.swing.JTextField;
@@ -65,7 +67,7 @@ public class FileTextField extends JTextField implements DropTargetListener, Doc
 	 */
 	private void update(){
 		if(listener != null){
-			listener.onContentChange(getText());
+			listener.onContentChange(getText(), getPath());
 		}
 	}
 	
@@ -75,6 +77,14 @@ public class FileTextField extends JTextField implements DropTargetListener, Doc
 	 */
 	public File getFile(){
 		return new File(getText());
+	}
+	
+	/**
+	 * Gets the content of this text field as a path.
+	 * @return The content of this text field as a path.
+	 */
+	public Path getPath(){
+		return Paths.get(getText());
 	}
 	
 	/**
@@ -143,7 +153,8 @@ public class FileTextField extends JTextField implements DropTargetListener, Doc
 		 * Called when the field content changes. The new
 		 * content does not need to be a valid file path.
 		 * @param content The new field content.
+		 * @param path A path object for the new field content.
 		 */
-		public abstract void onContentChange(String content);
+		public abstract void onContentChange(String content, Path path);
 	}
 }
