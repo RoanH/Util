@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Optional;
+import java.util.function.Consumer;
 
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -72,16 +74,46 @@ public class Util{
 	 * @see #getVersionLabel(String, String)
 	 */
 	public static JLabel getVersionLabel(String user, String repository, String currentVersion, boolean italics, int alignment){
+		return getVersionLabel(user, repository, currentVersion, "unknown", italics, alignment);
+	}
+	
+	/**
+	 * Gets a version label that automatically updates
+	 * with the latest version after some time.
+	 * @param user The user that owns the repository.
+	 * @param repository The repository to check the version for.
+	 * @param currentVersion The current version of the software.
+	 * @param def Default version name to set if the most up to date
+	 *        version cannot be determined.
+	 * @param italics Whether or not to display the
+	 *        text in italics.
+	 * @param alignment The text alignment inside the label.
+	 * @return An automatically updating label with the
+	 *         latest version.
+	 * @see SwingConstants
+	 * @see #getVersionLabel(String, String)
+	 */
+	public static JLabel getVersionLabel(String user, String repository, String currentVersion, String def, boolean italics, int alignment){
 		JLabel ver = new JLabel(String.format(italics ? VERSION_FORMAT_ITALICS : VERSION_FORMAT, currentVersion, "<i><font color=gray>loading</font></i>"), alignment);
-		new Thread(()->{
-			String version = checkVersion(user, repository);
-			ver.setText(String.format(italics ? VERSION_FORMAT_ITALICS : VERSION_FORMAT, currentVersion, version == null ? "unknown :(" : version));
-		}, "Version Checker").start();
+		checkVersion(user, repository, version->ver.setText(String.format(italics ? VERSION_FORMAT_ITALICS : VERSION_FORMAT, currentVersion, version.orElse(def))));
 		return ver;
 	}
 	
 	/**
-	 * Checks the version to see if we are running the latest version.
+	 * Asynchronously checks the latest version releases in the given repository.
+	 * @param user The user that owns the repository.
+	 * @param repository The repository to check in.
+	 * @param callback The callback to pass the found latest version to
+	 *        one is has been determined.
+	 */
+	public static void checkVersion(String user, String repository, Consumer<Optional<String>> callback){
+		Thread thread = new Thread(()->callback.accept(Optional.ofNullable(checkVersion(user, repository))), "Version Checker");
+		thread.setDaemon(true);
+		thread.start();
+	}
+	
+	/**
+	 * Gets the latest version releases in the given repository.
 	 * @param user The user that owns the repository.
 	 * @param repository The repository to check in.
 	 * @return The latest version.
@@ -92,27 +124,27 @@ public class Util{
 			con.setRequestMethod("GET");
 			con.addRequestProperty("Accept", "application/vnd.github.v3+json");
 			con.setConnectTimeout(10000);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-			String line = reader.readLine();
-			reader.close();
-			String[] versions = line.split("\"name\":\"v");
-			int max_main = 1;
-			int max_sub = 0;
-			String[] tmp;
-			for(int i = 1; i < versions.length; i++){
-				tmp = versions[i].split("\",\"")[0].split("\\.");
-				if(Integer.parseInt(tmp[0]) > max_main){
-					max_main = Integer.parseInt(tmp[0]);
-					max_sub = Integer.parseInt(tmp[1]);
-				}else if(Integer.parseInt(tmp[0]) < max_main){
-					continue;
-				}else{
-					if(Integer.parseInt(tmp[1]) > max_sub){
-						max_sub = Integer.parseInt(tmp[1]);
+			
+			try(BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()))){
+				String line = reader.readLine();
+				reader.close();
+				
+				String[] versions = line.split("\"name\":\"v");
+				int major = 1;
+				int minor = 0;
+				for(int i = 1; i < versions.length; i++){
+					String[] tmp = versions[i].split("\",\"")[0].split("\\.");
+					int num = Integer.parseInt(tmp[0]);
+					
+					if(num > major){
+						major = num;
+						minor = Integer.parseInt(tmp[1]);
+					}else if(num == major){
+						minor = Math.max(minor, Integer.parseInt(tmp[1]));
 					}
 				}
+				return "v" + major + "." + minor;
 			}
-			return "v" + max_main + "." + max_sub;
 		}catch(Exception e){
 			return null;
 			//No Internet access or something else is wrong,
