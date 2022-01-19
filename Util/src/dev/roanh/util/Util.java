@@ -30,7 +30,7 @@ public class Util{
 	/**
 	 * Gets a version label that automatically updates
 	 * with the latest version after some time. The
-	 * label text will be in italics and centered.
+	 * label text will be in italics and centred.
 	 * @param repository The repository to check the version for.
 	 * @param currentVersion The current version of the software.
 	 * @return An automatically updating label with the
