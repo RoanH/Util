@@ -1,7 +1,8 @@
 package dev.roanh.util;
 
 import java.awt.Image;
-import java.io.File;
+import java.nio.file.Path;
+
 import javax.swing.ActionMap;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -175,7 +176,7 @@ public class Dialog{
 	 *         <code>null</code> is returned.
 	 * @see FileSelector#registerFileExtension(String, String...)
 	 */
-	public static final File showFileOpenDialog(FileExtension... filters){
+	public static final Path showFileOpenDialog(FileExtension... filters){
 		return FileSelector.showFileOpenDialog(filters);
 	}
 	
@@ -187,7 +188,7 @@ public class Dialog{
 	 *         operation was cancelled 
 	 *         <code>null</code> is returned.
 	 */
-	public static final File showFolderOpenDialog(){
+	public static final Path showFolderOpenDialog(){
 		return FileSelector.showFolderOpenDialog();
 	}
 	
@@ -202,7 +203,7 @@ public class Dialog{
 	 *         operation was cancelled 
 	 *         <code>null</code> is returned.
 	 */
-	public static final File showFileSaveDialog(String name){
+	public static final Path showFileSaveDialog(String name){
 		return showFileSaveDialog(null, name);
 	}
 	
@@ -220,7 +221,7 @@ public class Dialog{
 	 * @see #showFileSaveDialog(String)
 	 * @see FileSelector#registerFileExtension(String, String...)
 	 */
-	public static final File showFileSaveDialog(FileExtension extension, String name){
+	public static final Path showFileSaveDialog(FileExtension extension, String name){
 		return FileSelector.showFileSaveDialog(extension, name);
 	}
 	
@@ -228,7 +229,7 @@ public class Dialog{
 	 * Gets the parent frame for the dialog windows.
 	 * @return The parent frame for the dialog windows.
 	 */
-	private static final JFrame getParentFrame(){
+	protected static final JFrame getParentFrame(){
 		return (parentFrame == null || !parentFrame.isVisible()) ? null : parentFrame;
 	}
 }

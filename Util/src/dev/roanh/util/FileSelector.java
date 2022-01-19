@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Locale;
 import java.util.Objects;
@@ -45,7 +46,7 @@ public class FileSelector{
 	 *         <code>null</code> is returned.
 	 * @see #registerFileExtension(String, String...)
 	 */
-	public static final File showFileOpenDialog(FileExtension... extensions){
+	public static final Path showFileOpenDialog(FileExtension... extensions){
 		Objects.requireNonNull(extensions, "The extensions array cannot be null.");
 		if(initialised){
 			long filters = 0;
@@ -53,7 +54,7 @@ public class FileSelector{
 				Objects.requireNonNull(extension, "File extensions cannot be null");
 				filters |= extension.nativeID;
 			}
-			return toFile(showNativeFileOpen(filters, extensions.length));
+			return toPath(showNativeFileOpen(filters, extensions.length));
 		}else{
 			chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 			chooser.resetChoosableFileFilters();
@@ -62,9 +63,9 @@ public class FileSelector{
 			}
 			chooser.setAcceptAllFileFilterUsed(extensions.length == 0);
 			
-			while(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION){
-				File selected = chooser.getSelectedFile();
-				if(selected.exists()){
+			while(chooser.showOpenDialog(Dialog.getParentFrame()) == JFileChooser.APPROVE_OPTION){
+				Path selected = chooser.getSelectedFile().toPath();
+				if(Files.exists(selected)){
 					return selected;
 				}else{
 					Dialog.showMessageDialog("The given file does not exist.\nCheck the path and try again.");
@@ -82,16 +83,16 @@ public class FileSelector{
 	 *         operation was cancelled 
 	 *         <code>null</code> is returned.
 	 */
-	public static final File showFolderOpenDialog(){
+	public static final Path showFolderOpenDialog(){
 		if(initialised){
-			return toFile(showNativeFolderOpen());
+			return toPath(showNativeFolderOpen());
 		}else{
 			chooser.resetChoosableFileFilters();
 			chooser.setAcceptAllFileFilterUsed(false);
 			chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-			while(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION){
-				File selected = chooser.getSelectedFile();
-				if(selected.exists()){
+			while(chooser.showOpenDialog(Dialog.getParentFrame()) == JFileChooser.APPROVE_OPTION){
+				Path selected = chooser.getSelectedFile().toPath();
+				if(Files.exists(selected)){
 					return selected;
 				}else{
 					Dialog.showMessageDialog("The given folder does not exist.\nCheck the path and try again.");
@@ -112,12 +113,14 @@ public class FileSelector{
 	 *         agreed to overwrite it. If the
 	 *         operation was cancelled 
 	 *         <code>null</code> is returned.
+	 * @throws NullPointerException When the provided
+	 *         default name is <code>null</code>.
 	 * @see #registerFileExtension(String, String...)
 	 */
-	public static final File showFileSaveDialog(FileExtension filter, String name){
+	public static final Path showFileSaveDialog(FileExtension filter, String name){
 		Objects.requireNonNull(name, "Provided default cannot be null.");
 		if(initialised){
-			return toFile(showNativeFileSave(filter != null ? filter.nativeID : 0, name));
+			return toPath(showNativeFileSave(filter != null ? filter.nativeID : 0, name));
 		}else{
 			String extension;
 			if(filter == null){
@@ -133,13 +136,13 @@ public class FileSelector{
 			}
 			
 			chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-			while(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION){
-				File file = chooser.getSelectedFile();
-				if(!file.getName().toLowerCase(Locale.ROOT).endsWith(extension)){
-					file = new File(file.getAbsolutePath() + extension);
+			while(chooser.showOpenDialog(Dialog.getParentFrame()) == JFileChooser.APPROVE_OPTION){
+				Path file = chooser.getSelectedFile().toPath();
+				if(!file.getFileName().toString().toLowerCase(Locale.ROOT).endsWith(extension)){
+					file = file.resolveSibling(file.getFileName().toString() + extension);
 				}
 				
-				if(file.exists() && !Dialog.showConfirmDialog(file.getName() + " already exists.\nDo you want to replace it?")){
+				if(Files.exists(file) && !Dialog.showConfirmDialog(file.getFileName().toString() + " already exists.\nDo you want to replace it?")){
 					continue;
 				}
 
@@ -151,16 +154,16 @@ public class FileSelector{
 	
 	/**
 	 * Converts the given file path to a
-	 * Java file instance.
-	 * @param path The part to parse.
+	 * Java path instance.
+	 * @param path The path to parse.
 	 * @return A file instance for the given
 	 *         path or <code>null</code> if
 	 *         the given path was <code>null</code>.
 	 *         The path is not validated in any way.
 	 * @see File
 	 */
-	private static File toFile(String path){
-		return path == null ? null : new File(path);
+	private static Path toPath(String path){
+		return path == null ? null : Paths.get(path);
 	}
 	
 	/**
@@ -264,7 +267,7 @@ public class FileSelector{
 							
 							out.flush();
 						}
-						
+												
 						try{
 							System.load(tmp.toAbsolutePath().toString());
 							initialised = true;
