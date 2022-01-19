@@ -278,7 +278,7 @@ public class FileSelector{
 				}				
 			}
 		}
-		
+		initialised=false;
 		if(!initialised){
 			chooser = new JFileChooser();
 		}

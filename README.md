@@ -10,7 +10,7 @@ repositories{
 }
 
 dependencies{
-	implementation 'dev.roanh.util:util:2.0'
+	implementation 'dev.roanh.util:util:2.1'
 }
 ```
 
