@@ -77,7 +77,7 @@ publishing{
 	jar{
 		into("META-INF/maven/$project.group/$project.publishing.publications.mavenJava.artifactId"){
 			from{
-				generatePomFileForNexusPublication
+				generatePomFileForMavenJavaPublication
 			}
 			rename ".*", "pom.xml"
 		}
