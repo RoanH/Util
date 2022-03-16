@@ -3,7 +3,9 @@ Utilities for public projects. I mainly use this repository to implement feature
 
 Documentation can be found at: https://util.docs.roanh.dev/
 
-### Gradle [![Maven Central](https://img.shields.io/maven-central/v/dev.roanh.util/util)](https://mvnrepository.com/artifact/dev.roanh.util/util)
+### Artifacts [![Maven Central](https://img.shields.io/maven-central/v/dev.roanh.util/util)](https://mvnrepository.com/artifact/dev.roanh.util/util)
+
+##### Gradle 
 ```groovy
 repositories{
 	mavenCentral()
@@ -13,6 +15,15 @@ dependencies{
 	implementation 'dev.roanh.util:util:2.1'
 }
 ```
+
+##### Maven
+```xml
+<dependency>
+   <groupId>dev.roanh.util</groupId>
+   <artifactId>util</artifactId>
+   <version>2.1</version>
+</dependency>
+````
 
 ## History
 Project development started: 16th of August, 2019.    
