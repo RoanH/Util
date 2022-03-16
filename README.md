@@ -19,9 +19,9 @@ dependencies{
 ##### Maven
 ```xml
 <dependency>
-   <groupId>dev.roanh.util</groupId>
-   <artifactId>util</artifactId>
-   <version>2.1</version>
+	<groupId>dev.roanh.util</groupId>
+	<artifactId>util</artifactId>
+	<version>2.1</version>
 </dependency>
 ````
 
