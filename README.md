@@ -1,4 +1,4 @@
-# Util
+# Util [![](https://img.shields.io/github/release/RoanH/Util.svg)](https://github.com/RoanH/Util/releases) 
 Utilities for public projects. I mainly use this repository to implement features to all of my projects at the same time. You're free to use this as a dependency for your own project. Currently the most interesting feature is being able to use the modern style Windows file chooser that normally isn't available in Swing.
 
 Documentation can be found at: https://util.docs.roanh.dev/
