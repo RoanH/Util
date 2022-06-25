@@ -118,7 +118,7 @@ public class FileSelector{
 	 * @see #registerFileExtension(String, String...)
 	 */
 	public static final Path showFileSaveDialog(FileExtension filter, String name){
-		Objects.requireNonNull(name, "Provided default cannot be null.");
+		Objects.requireNonNull(name, "Provided default name cannot be null.");
 		if(initialised){
 			return toPath(showNativeFileSave(filter != null ? filter.nativeID : 0, name));
 		}else{
@@ -136,7 +136,7 @@ public class FileSelector{
 			}
 			
 			chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-			while(chooser.showOpenDialog(Dialog.getParentFrame()) == JFileChooser.APPROVE_OPTION){
+			while(chooser.showSaveDialog(Dialog.getParentFrame()) == JFileChooser.APPROVE_OPTION){
 				Path file = chooser.getSelectedFile().toPath();
 				if(!file.getFileName().toString().toLowerCase(Locale.ROOT).endsWith(extension)){
 					file = file.resolveSibling(file.getFileName().toString() + extension);
@@ -160,7 +160,7 @@ public class FileSelector{
 	 *         path or <code>null</code> if
 	 *         the given path was <code>null</code>.
 	 *         The path is not validated in any way.
-	 * @see File
+	 * @see Path
 	 */
 	private static Path toPath(String path){
 		return path == null ? null : Paths.get(path);
@@ -250,34 +250,34 @@ public class FileSelector{
 	static{
 		initialised = false;
 
-		if(System.getProperty("os.name").toLowerCase(Locale.ROOT).contains("windows")){
-			String arch = System.getProperty("os.arch");
-			if(arch.equals("amd64") || arch.equals("x86")){
-				try(InputStream in = ClassLoader.getSystemResourceAsStream("dev/roanh/util/lib/" + arch + "/Util.dll")){
-					if(in != null){
-						Path tmp = Files.createTempFile("Util", ".dll");
-						tmp.toFile().deleteOnExit();
-						
-						try(OutputStream out = Files.newOutputStream(tmp, StandardOpenOption.CREATE)){
-							byte[] buffer = new byte[1024];
-							int len;
-							while((len = in.read(buffer)) != -1){
-								out.write(buffer, 0, len);
-							}
-							
-							out.flush();
-						}
-						
-						try{
-							System.load(tmp.toAbsolutePath().toString());
-							initialised = true;
-						}catch(UnsatisfiedLinkError ignore){
-						}
-					}
-				}catch(IOException ignore){
-				}				
-			}
-		}
+//		if(System.getProperty("os.name").toLowerCase(Locale.ROOT).contains("windows")){
+//			String arch = System.getProperty("os.arch");
+//			if(arch.equals("amd64") || arch.equals("x86")){
+//				try(InputStream in = ClassLoader.getSystemResourceAsStream("dev/roanh/util/lib/" + arch + "/Util.dll")){
+//					if(in != null){
+//						Path tmp = Files.createTempFile("Util", ".dll");
+//						tmp.toFile().deleteOnExit();
+//						
+//						try(OutputStream out = Files.newOutputStream(tmp, StandardOpenOption.CREATE)){
+//							byte[] buffer = new byte[1024];
+//							int len;
+//							while((len = in.read(buffer)) != -1){
+//								out.write(buffer, 0, len);
+//							}
+//							
+//							out.flush();
+//						}
+//						
+//						try{
+//							System.load(tmp.toAbsolutePath().toString());
+//							initialised = true;
+//						}catch(UnsatisfiedLinkError ignore){
+//						}
+//					}
+//				}catch(IOException ignore){
+//				}				
+//			}
+//		}
 
 		if(!initialised){
 			chooser = new JFileChooser();
