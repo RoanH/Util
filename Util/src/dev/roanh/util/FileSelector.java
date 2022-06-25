@@ -280,34 +280,39 @@ public class FileSelector{
 	static{
 		initialised = false;
 
-//		if(System.getProperty("os.name").toLowerCase(Locale.ROOT).contains("windows")){
-//			String arch = System.getProperty("os.arch");
-//			if(arch.equals("amd64") || arch.equals("x86")){
-//				try(InputStream in = ClassLoader.getSystemResourceAsStream("dev/roanh/util/lib/" + arch + "/Util.dll")){
-//					if(in != null){
-//						Path tmp = Files.createTempFile("Util", ".dll");
-//						tmp.toFile().deleteOnExit();
-//						
-//						try(OutputStream out = Files.newOutputStream(tmp, StandardOpenOption.CREATE)){
-//							byte[] buffer = new byte[1024];
-//							int len;
-//							while((len = in.read(buffer)) != -1){
-//								out.write(buffer, 0, len);
-//							}
-//							
-//							out.flush();
-//						}
-//						
-//						try{
-//							System.load(tmp.toAbsolutePath().toString());
-//							initialised = true;
-//						}catch(UnsatisfiedLinkError ignore){
-//						}
-//					}
-//				}catch(IOException ignore){
-//				}				
-//			}
-//		}
+		if(System.getProperty("os.name").toLowerCase(Locale.ROOT).contains("windows")){
+			String arch = System.getProperty("os.arch");
+			if(arch.equals("amd64") || arch.equals("x86")){
+				try(InputStream in = ClassLoader.getSystemResourceAsStream("dev/roanh/util/lib/" + arch + "/Util.dll")){
+					if(in != null){
+						Path tmp = null;
+						if(Util.VERSION != null){
+							tmp = Paths.get(System.getProperty("java.io.tmpdir")).resolve("RoanH-Util-v" + Util.VERSION + "-arch.dll");
+						}else{
+							tmp = Files.createTempFile("Util", ".dll");
+							tmp.toFile().deleteOnExit();
+						}
+						
+						try(OutputStream out = Files.newOutputStream(tmp, StandardOpenOption.CREATE)){
+							byte[] buffer = new byte[1024];
+							int len;
+							while((len = in.read(buffer)) != -1){
+								out.write(buffer, 0, len);
+							}
+							
+							out.flush();
+						}
+						
+						try{
+							System.load(tmp.toAbsolutePath().toString());
+							initialised = true;
+						}catch(UnsatisfiedLinkError ignore){
+						}
+					}
+				}catch(IOException ignore){
+				}				
+			}
+		}
 	}
 	
 	/**
