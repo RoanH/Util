@@ -12,7 +12,7 @@ repositories{
 }
 
 dependencies{
-	implementation 'dev.roanh.util:util:2.1'
+	implementation 'dev.roanh.util:util:2.2'
 }
 ```
 
@@ -21,7 +21,7 @@ dependencies{
 <dependency>
 	<groupId>dev.roanh.util</groupId>
 	<artifactId>util</artifactId>
-	<version>2.1</version>
+	<version>2.2</version>
 </dependency>
 ````
 
