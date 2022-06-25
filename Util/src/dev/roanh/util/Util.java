@@ -19,7 +19,6 @@
 package dev.roanh.util;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -40,6 +39,11 @@ import org.w3c.dom.NodeList;
  * @author Roan
  */
 public class Util{
+	/**
+	 * The current Util version as a string without the 'v' prefix.
+	 * If Util is built locally and not included as a release artifact
+	 * this field will likely be <code>null</code>.
+	 */
 	public static final String VERSION = readArtifactVersion("dev.roanh.util", "util");
 	/**
 	 * Version label format in italics.
@@ -188,6 +192,15 @@ public class Util{
 		}
 	}
 	
+	/**
+	 * Reads the <code>version</code> field from the given Maven artifact
+	 * included in the current jar(s).
+	 * @param group The group ID for the artifact.
+	 * @param artifact The name of the artifact to get the version of.
+	 * @return The version field of the given Maven artifact or <code>
+	 *         null</code> if no version information was found for the
+	 *         given artifact.
+	 */
 	public static final String readArtifactVersion(String group, String artifact){
 		try(InputStream pom = ClassLoader.getSystemResourceAsStream("META-INF/maven/" + group + "/" + artifact + "/pom.xml")){
 			if(pom == null){
