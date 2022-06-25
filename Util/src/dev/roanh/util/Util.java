@@ -67,7 +67,7 @@ public class Util{
 	 * @see SwingConstants
 	 * @see #getVersionLabel(String, String, boolean, int)
 	 */
-	public static JLabel getVersionLabel(String repository, String currentVersion){
+	public static final JLabel getVersionLabel(String repository, String currentVersion){
 		return getVersionLabel(repository, currentVersion, true, SwingConstants.CENTER);
 	}
 	
@@ -84,7 +84,7 @@ public class Util{
 	 * @see SwingConstants
 	 * @see #getVersionLabel(String, String)
 	 */
-	public static JLabel getVersionLabel(String repository, String currentVersion, boolean italics, int alignment){
+	public static final JLabel getVersionLabel(String repository, String currentVersion, boolean italics, int alignment){
 		return getVersionLabel("RoanH", repository, currentVersion, italics, alignment);
 	}
 	
@@ -102,7 +102,7 @@ public class Util{
 	 * @see SwingConstants
 	 * @see #getVersionLabel(String, String)
 	 */
-	public static JLabel getVersionLabel(String user, String repository, String currentVersion, boolean italics, int alignment){
+	public static final JLabel getVersionLabel(String user, String repository, String currentVersion, boolean italics, int alignment){
 		return getVersionLabel(user, repository, currentVersion, "unknown", italics, alignment);
 	}
 	
@@ -122,7 +122,7 @@ public class Util{
 	 * @see SwingConstants
 	 * @see #getVersionLabel(String, String)
 	 */
-	public static JLabel getVersionLabel(String user, String repository, String currentVersion, String def, boolean italics, int alignment){
+	public static final JLabel getVersionLabel(String user, String repository, String currentVersion, String def, boolean italics, int alignment){
 		JLabel ver = new JLabel(String.format(italics ? VERSION_FORMAT_ITALICS : VERSION_FORMAT, currentVersion, "<i><font color=gray>loading</font></i>"), alignment);
 		checkVersion(user, repository, version->ver.setText(String.format(italics ? VERSION_FORMAT_ITALICS : VERSION_FORMAT, currentVersion, version.orElse(def))));
 		return ver;
@@ -135,7 +135,7 @@ public class Util{
 	 * @param callback The callback to pass the found latest version to
 	 *        one is has been determined.
 	 */
-	public static void checkVersion(String user, String repository, Consumer<Optional<String>> callback){
+	public static final void checkVersion(String user, String repository, Consumer<Optional<String>> callback){
 		Thread thread = new Thread(()->callback.accept(Optional.ofNullable(checkVersion(user, repository))), "Version Checker");
 		thread.setDaemon(true);
 		thread.start();
