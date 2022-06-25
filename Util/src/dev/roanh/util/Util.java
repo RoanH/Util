@@ -19,6 +19,8 @@
 package dev.roanh.util;
 
 import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -28,12 +30,17 @@ import java.util.function.Consumer;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Class with various utility subroutines.
  * @author Roan
  */
 public class Util{
+	public static final String VERSION = readArtifactVersion("dev.roanh.util", "util");
 	/**
 	 * Version label format in italics.
 	 * @see #VERSION_FORMAT
@@ -178,6 +185,29 @@ public class Util{
 		try{
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		}catch(Throwable ignore){
+		}
+	}
+	
+	public static final String readArtifactVersion(String group, String artifact){
+		try(InputStream pom = ClassLoader.getSystemResourceAsStream("META-INF/maven/" + group + "/" + artifact + "/pom.xml")){
+			if(pom == null){
+				return null;
+			}
+			
+			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+			docFactory.setIgnoringElementContentWhitespace(true);
+			
+			NodeList data = docFactory.newDocumentBuilder().parse(pom).getElementsByTagName("project").item(0).getChildNodes();
+			for(int i = 0; i < data.getLength(); i++){
+				Node node = data.item(i);
+				if(node.getNodeName().equals("version")){
+					return node.getTextContent();
+				}
+			}
+			
+			return null;
+		}catch(Exception e){
+			return null;
 		}
 	}
 }
