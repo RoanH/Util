@@ -33,7 +33,7 @@ public class FileSelector{
 	 * File chooser instance if no
 	 * native library is loaded.
 	 */
-	private static JFileChooser chooser;
+	private static JFileChooser chooser = null;
 	
 	/**
 	 * Opens a file open dialog.
@@ -56,6 +56,10 @@ public class FileSelector{
 			}
 			return toPath(showNativeFileOpen(filters, extensions.length));
 		}else{
+			if(chooser == null){
+				chooser = new JFileChooser();
+			}
+			
 			chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 			chooser.resetChoosableFileFilters();
 			for(FileExtension ext : extensions){
@@ -87,6 +91,10 @@ public class FileSelector{
 		if(initialised){
 			return toPath(showNativeFolderOpen());
 		}else{
+			if(chooser == null){
+				chooser = new JFileChooser();
+			}
+			
 			chooser.resetChoosableFileFilters();
 			chooser.setAcceptAllFileFilterUsed(false);
 			chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -122,6 +130,10 @@ public class FileSelector{
 		if(initialised){
 			return toPath(showNativeFileSave(filter != null ? filter.nativeID : 0, name));
 		}else{
+			if(chooser == null){
+				chooser = new JFileChooser();
+			}
+			
 			String extension;
 			if(filter == null){
 				chooser.setSelectedFile(new File(name));
@@ -278,10 +290,6 @@ public class FileSelector{
 //				}				
 //			}
 //		}
-
-		if(!initialised){
-			chooser = new JFileChooser();
-		}
 	}
 	
 	/**
