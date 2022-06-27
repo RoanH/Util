@@ -288,28 +288,32 @@ public class FileSelector{
 						Path tmp = null;
 						if(Util.VERSION != null){
 							tmp = Paths.get(System.getProperty("java.io.tmpdir")).resolve("RoanH-Util-v" + Util.VERSION + "-" + arch + ".dll");
-						}else{
+						}
+
+						if(tmp == null || Files.notExists(tmp)){
 							tmp = Files.createTempFile("Util", ".dll");
 							tmp.toFile().deleteOnExit();
-						}
-						
-						try(OutputStream out = Files.newOutputStream(tmp, StandardOpenOption.CREATE)){
-							byte[] buffer = new byte[1024];
-							int len;
-							while((len = in.read(buffer)) != -1){
-								out.write(buffer, 0, len);
-							}
 							
-							out.flush();
+							try(OutputStream out = Files.newOutputStream(tmp, StandardOpenOption.CREATE)){
+								byte[] buffer = new byte[1024];
+								int len;
+								while((len = in.read(buffer)) != -1){
+									out.write(buffer, 0, len);
+								}
+								
+								out.flush();
+							}
 						}
 						
 						try{
 							System.load(tmp.toAbsolutePath().toString());
 							initialised = true;
 						}catch(UnsatisfiedLinkError ignore){
+							ignore.printStackTrace();
 						}
 					}
 				}catch(IOException ignore){
+					ignore.printStackTrace();
 				}				
 			}
 		}
