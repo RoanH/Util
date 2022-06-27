@@ -309,11 +309,9 @@ public class FileSelector{
 							System.load(tmp.toAbsolutePath().toString());
 							initialised = true;
 						}catch(UnsatisfiedLinkError ignore){
-							ignore.printStackTrace();
 						}
 					}
 				}catch(IOException ignore){
-					ignore.printStackTrace();
 				}				
 			}
 		}
