@@ -287,7 +287,7 @@ public class FileSelector{
 					if(in != null){
 						Path tmp = null;
 						if(Util.VERSION != null){
-							tmp = Paths.get(System.getProperty("java.io.tmpdir")).resolve("RoanH-Util-v" + Util.VERSION + "-arch.dll");
+							tmp = Paths.get(System.getProperty("java.io.tmpdir")).resolve("RoanH-Util-v" + Util.VERSION + "-" + arch + ".dll");
 						}else{
 							tmp = Files.createTempFile("Util", ".dll");
 							tmp.toFile().deleteOnExit();
