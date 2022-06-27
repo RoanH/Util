@@ -286,14 +286,17 @@ public class FileSelector{
 				try(InputStream in = ClassLoader.getSystemResourceAsStream("dev/roanh/util/lib/" + arch + "/Util.dll")){
 					if(in != null){
 						Path tmp = null;
+						boolean write = false;
 						if(Util.VERSION != null){
 							tmp = Paths.get(System.getProperty("java.io.tmpdir")).resolve("RoanH-Util-v" + Util.VERSION + "-" + arch + ".dll");
-						}
-
-						if(tmp == null || Files.notExists(tmp)){
+							write = Files.notExists(tmp);
+						}else{
 							tmp = Files.createTempFile("Util", ".dll");
 							tmp.toFile().deleteOnExit();
-							
+							write = true;
+						}
+
+						if(write){
 							try(OutputStream out = Files.newOutputStream(tmp, StandardOpenOption.CREATE)){
 								byte[] buffer = new byte[1024];
 								int len;
