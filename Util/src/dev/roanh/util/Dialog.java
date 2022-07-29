@@ -246,8 +246,27 @@ public class Dialog{
 	/**
 	 * Gets the parent frame for the dialog windows.
 	 * @return The parent frame for the dialog windows.
+	 * @see #setParentFrame(JFrame)
 	 */
-	protected static final JFrame getParentFrame(){
+	public static final JFrame getParentFrame(){
 		return (parentFrame == null || !parentFrame.isVisible()) ? null : parentFrame;
+	}
+	
+	/**
+	 * Gets the icon for the dialog windows.
+	 * @return The icon for the dialog windows.
+	 * @see #setDialogIcon(Image)
+	 */
+	public static Image getDialogIcon(){
+		return icon;
+	}
+	
+	/**
+	 * Gets the title for the dialog windows.
+	 * @return The title for the dialog windows.
+	 * @see #setDialogTitle(String)
+	 */
+	public static String getDialogTitle(){
+		return title;
 	}
 }
