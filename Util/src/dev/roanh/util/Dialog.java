@@ -18,6 +18,7 @@
  */
 package dev.roanh.util;
 
+import java.awt.Dialog.ModalityType;
 import java.awt.Image;
 import java.nio.file.Path;
 
@@ -173,6 +174,8 @@ public class Dialog{
 		JDialog dialog = optionPane.createDialog(getParentFrame(), title);
 		dialog.setResizable(resizable);
 		dialog.setIconImage(icon);
+		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		dialog.pack();
 		dialog.setVisible(true);
 		
 		for(int i = 0; i < options.length; i++){
@@ -181,6 +184,21 @@ public class Dialog{
 			}
 		}
 		return -1;
+	}
+	
+	public static final JDialog showDialog(Object form, boolean resizable, ModalityType modalType){
+		JOptionPane pane = new JOptionPane(form);
+		pane.setOptions(new Object[]{});
+		pane.setActionMap(new ActionMap());
+
+		JDialog dialog = pane.createDialog(getParentFrame(), title);
+		dialog.setResizable(resizable);
+		dialog.setIconImage(icon);
+		dialog.setModalityType(modalType);
+		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		dialog.pack();
+		
+		return dialog;
 	}
 	
 	/**
