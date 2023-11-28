@@ -74,65 +74,59 @@ public class Dialog{
 
 	/**
 	 * Shows the given object to the user.
-	 * The dialog will have a 'Save' and
-	 * 'Cancel' close option.
-	 * @param form The object to display
-	 * @param resizable Whether the user should
-	 *        be able to resize the dialog
-	 * @return True if the 'Save' option was selected
+	 * The dialog will have a 'Save' and 'Cancel' close option.
+	 * @param form The object to display.
+	 * @param resizable Whether the user should be able to resize the dialog.
+	 * @return True if the 'Save' option was selected.
 	 */
-	public static final boolean showSaveDialog(Object form, boolean resizable){
-		return 0 == showDialog(form, resizable, new String[]{"Save", "Cancel"});
+	public static final boolean showSaveDialog(Object form, boolean resizable, ModalityType modalType){
+		return 0 == showDialog(form, resizable, modalType, new String[]{"Save", "Cancel"});
 	}
 
 	/**
 	 * Shows the given object to the user.
-	 * The dialog will have a 'Save' and
-	 * 'Cancel' close option.
-	 * @param form The object to display
-	 * @return True if the 'Save' option was selected
+	 * The dialog will have a 'Save' and 'Cancel' close option.
+	 * @param form The object to display.
+	 * @return True if the 'Save' option was selected.
 	 */
 	public static final boolean showSaveDialog(Object form){
-		return showSaveDialog(form, false);
+		return showSaveDialog(form, false, ModalityType.APPLICATION_MODAL);
 	}
 	
 	/**
 	 * Shows the given object to the user.
-	 * The dialog will have a 'OK' and
-	 * 'Cancel' close option.
-	 * @param form The object to display
-	 * @return True if the 'OK' option was selected
+	 * The dialog will have an 'OK' and 'Cancel' close option.
+	 * @param form The object to display.
+	 * @return True if the 'OK' option was selected.
 	 */
 	public static final boolean showSelectDialog(Object form){
-		return 0 == showDialog(form, false, new String[]{"OK", "Cancel"});
+		return 0 == showDialog(form, false, ModalityType.APPLICATION_MODAL, new String[]{"OK", "Cancel"});
 	}
 
 	/**
-	 * Poses the given object as a yes/no option
-	 * dialog to the user.
-	 * @param msg The object to display
-	 * @return True if the user selected yes
+	 * Poses the given object as a yes/no option dialog to the user.
+	 * @param msg The object to display.
+	 * @return True if the user selected yes.
 	 */
 	public static final boolean showConfirmDialog(Object msg){
-		return 0 == showDialog(msg, false, new String[]{"Yes", "No"});
+		return 0 == showDialog(msg, false, ModalityType.APPLICATION_MODAL, new String[]{"Yes", "No"});
 	}
 
 	/**
-	 * Shows the given object to the user in a dialog
-	 * @param msg The object to display
+	 * Shows the given object to the user in a dialog.
+	 * @param msg The object to display.
 	 */
 	public static final void showMessageDialog(Object msg){
-		showMessageDialog(msg, false);
+		showMessageDialog(msg, false, ModalityType.APPLICATION_MODAL);
 	}
 
 	/**
-	 * Shows the given object to the user in a dialog
-	 * @param msg The object to display
-	 * @param resizable Whether the user should
-	 *        be able to resize the dialog
+	 * Shows the given object to the user in a dialog.
+	 * @param msg The object to display.
+	 * @param resizable Whether the user should be able to resize the dialog
 	 */
-	public static final void showMessageDialog(Object msg, boolean resizable){
-		showDialog(msg, resizable, new String[]{"OK"});
+	public static final void showMessageDialog(Object msg, boolean resizable, ModalityType modalType){
+		showDialog(msg, resizable, modalType, new String[]{"OK"});
 	}
 
 	/**
@@ -144,38 +138,27 @@ public class Dialog{
 	}
 	
 	/**
-	 * Shows the given object as a dialog
-	 * with the given close options.
-	 * @param form The dialog to display
-	 * @param options The close options
-	 *        for the dialog.
-	 * @return The index of the option that
-	 *         was chosen in the options array.
+	 * Shows the given object as a dialog with the given close options.
+	 * @param form The dialog to display.
+	 * @param options The close options for the dialog.
+	 * @return The index of the option that was chosen in the options array
+	 *         or -1 if the dialog window was closed.
 	 */
 	public static final int showDialog(Object form, String[] options){
-		return showDialog(form, false, options);
+		return showDialog(form, false, ModalityType.APPLICATION_MODAL, options);
 	}
 	
 	/**
-	 * Shows the given object as a dialog
-	 * with the given close options.
-	 * @param form The dialog to display
-	 * @param resizable Whether or not the
-	 *        dialog can be resized.
-	 * @param options The close options
-	 *        for the dialog.
-	 * @return The index of the option that
-	 *         was chosen in the options array.
+	 * Shows the given object as a dialog with the given close options.
+	 * @param form The dialog to display.
+	 * @param resizable Whether or not the dialog can be resized.
+	 * @param options The close options for the dialog.
+	 * @return The index of the option that was chosen in the options array
+	 *         or -1 if the dialog window was closed.
 	 */
-	public static final int showDialog(Object form, boolean resizable, String[] options){
+	public static final int showDialog(Object form, boolean resizable, ModalityType modalType, String[] options){
 		JOptionPane optionPane = new JOptionPane(form, JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, 0);
-		optionPane.setActionMap(new ActionMap());
-		
-		JDialog dialog = optionPane.createDialog(getParentFrame(), title);
-		dialog.setResizable(resizable);
-		dialog.setIconImage(icon);
-		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		dialog.pack();
+		JDialog dialog = buildDialog(optionPane, resizable, modalType);
 		dialog.setVisible(true);
 		
 		for(int i = 0; i < options.length; i++){
@@ -183,21 +166,22 @@ public class Dialog{
 				return i;
 			}
 		}
+
 		return -1;
 	}
 	
 	public static final JDialog showDialog(Object form, boolean resizable, ModalityType modalType){
-		JOptionPane pane = new JOptionPane(form);
-		pane.setOptions(new Object[]{});
+		return buildDialog(new JOptionPane(form), resizable, modalType);
+	}
+	
+	private static final JDialog buildDialog(JOptionPane pane, boolean resizable, ModalityType modalType){
 		pane.setActionMap(new ActionMap());
-
 		JDialog dialog = pane.createDialog(getParentFrame(), title);
 		dialog.setResizable(resizable);
 		dialog.setIconImage(icon);
 		dialog.setModalityType(modalType);
 		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		dialog.pack();
-		
 		return dialog;
 	}
 	
