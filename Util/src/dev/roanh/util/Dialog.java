@@ -26,6 +26,7 @@ import javax.swing.ActionMap;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import dev.roanh.util.FileSelector.FileExtension;
 
@@ -170,8 +171,11 @@ public class Dialog{
 		return -1;
 	}
 	
+	//non blocking need to call setvisible false to close
 	public static final JDialog showDialog(Object form, boolean resizable, ModalityType modalType){
-		return buildDialog(new JOptionPane(form), resizable, modalType);
+		JDialog dialog = buildDialog(new JOptionPane(form), resizable, modalType);
+		SwingUtilities.invokeLater(()->dialog.setVisible(true));
+		return dialog;
 	}
 	
 	private static final JDialog buildDialog(JOptionPane pane, boolean resizable, ModalityType modalType){
