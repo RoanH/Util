@@ -1,53 +1,69 @@
 plugins{
-	id 'java'
 	id 'java-library'
 	id 'maven-publish'
-	id 'eclipse'
 	id 'signing'
+	id 'eclipse'
+	id 'com.github.spotbugs' version '5.0.14'
 }
 
 sourceSets{
 	main{
-		java{
-			srcDirs = ['src']
-			//exclude '**/*.dll'
+		java.srcDirs = ['src']
+		resources.srcDirs = ['resources']
+	}
+}
+
+repositories{
+	//Local cache
+	if(project.hasProperty("nexusPublic")){
+		maven{
+			allowInsecureProtocol = true
+			url "$nexusPublic"
 		}
-		resources{
-			srcDirs = ['resources']
-			//exclude '**/*.java'
+	}
+	mavenCentral();
+}
+
+eclipse.classpath.downloadSources = true
+eclipse.classpath.downloadJavadoc = true
+compileJava.options.encoding = 'UTF-8'
+sourceCompatibility = 1.8
+javadoc.options.memberLevel = JavadocMemberLevel.PRIVATE
+
+spotbugs{
+	showProgress = true
+	effort = 'max'
+	reportLevel = 'low'
+	excludeFilter = file("exclude.xml")
+}
+
+spotbugsMain{
+	reports{
+		html{
+			required = true
+			outputLocation = file("$buildDir/reports/spotbugs/main/spotbugs.html")
+			stylesheet = 'fancy-hist.xsl'
 		}
 	}
 }
 
-java{
-	withSourcesJar()
-	withJavadocJar()
-}
-
-javadoc{
-	options.memberLevel = JavadocMemberLevel.PRIVATE
-}
-
-compileJava.options.encoding = 'UTF-8'
-sourceCompatibility = 1.8
-
 group = 'dev.roanh.util'
-version = System.getenv("VERSION") ? System.getenv("VERSION").substring(1) : '2.4-SNAPSHOT'
+version = project.hasProperty("releaseVersion") ? releaseVersion : 'SNAPSHOT'
 
 publishing{
 	publications{
-		mavenJava(MavenPublication){
-			artifactId = 'util'
+		nexus(MavenPublication){
 			from components.java
-		
+			artifactId = 'util'
+
 			pom{
-				name = 'Util'
+				name = project.eclipse.project.name
 				description = 'Utilities library for public projects'
-				url = 'https://github.com/RoanH/Util'
+				url = 'https://git.roanh.dev/roan/util'
 				licenses{
 					license{
 						name = 'GNU General Public License v3.0'
-						url = 'http://www.gnu.org/licenses/gpl-3.0.txt'
+						url = 'https://www.gnu.org/licenses/gpl-3.0.txt'
 					}
 				}
 				developers{
@@ -58,14 +74,14 @@ publishing{
 					}
 				}
 				scm{
-					connection = 'scm:git:git@github.com:RoanH/Util.git'
+					connection = 'scm:git:git@git.roanh.dev:roan/util.git'
 					developerConnection = 'scm:git:git@git.roanh.dev:roan/util.git'
-					url = 'https://github.com/RoanH/Util'
+					url = 'https://git.roanh.dev/roan/util'
 				}
 			}
 		}
 	}
-	
+
 	repositories{
 		maven{
 			url "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
@@ -75,17 +91,16 @@ publishing{
 			}
 		}
 	}
-	
-	jar{
-		into("META-INF/maven/$project.group/$project.publishing.publications.mavenJava.artifactId"){
-			from{
-				generatePomFileForMavenJavaPublication
-			}
-			rename ".*", "pom.xml"
-		}
-	}
 }
 
+jar{
+	into("META-INF/maven/$project.group/$project.publishing.publications.nexus.artifactId"){
+		from{
+			generatePomFileForNexusPublication
+		}
+		rename ".*", "pom.xml"
+	}
+}
 signing{
 	useInMemoryPgpKeys(findProperty("signingKeyId"), findProperty("signingKey"), findProperty("signingPassword"))
 	sign publishing.publications.mavenJava
