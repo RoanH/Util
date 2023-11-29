@@ -17,5 +17,10 @@
     <Bug pattern="DM_EXIT"/>
     <Class name="dev.roanh.util.ExclamationMarkPath"/>
   </Match>
+  
+  <Match>
+    <Bug pattern="MC_OVERRIDABLE_METHOD_CALL_IN_CONSTRUCTOR"/>
+    <Class name="dev.roanh.util.FileTextField"/>
+  </Match>
 
 </FindBugsFilter>
