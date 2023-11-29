@@ -8,5 +8,5 @@ rmdir /S /Q x64
 
 cd ..\..
 
-copy /y native\Util\x64\Release\Util.dll src\dev\roanh\util\lib\amd64\Util.dll
-copy /y native\Util\Release\Util.dll src\dev\roanh\util\lib\x86\Util.dll
+copy /y native\Util\x64\Release\Util.dll resources\dev\roanh\util\lib\amd64\Util.dll
+copy /y native\Util\Release\Util.dll resources\dev\roanh\util\lib\x86\Util.dll
