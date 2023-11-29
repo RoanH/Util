@@ -63,6 +63,7 @@ public class FileTextField extends JTextField implements DropTargetListener, Doc
 	 * @param listener The listener to call
 	 *        when the field content changes.
 	 */
+	@SuppressWarnings("unused")
 	public FileTextField(FileChangeListener listener){
 		this.getDocument().addDocumentListener(this);
 		new DropTarget(this, this);

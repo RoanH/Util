@@ -78,6 +78,11 @@ public class Dialog{
 	 * The dialog will have a 'Save' and 'Cancel' close option.
 	 * @param form The object to display.
 	 * @param resizable Whether the user should be able to resize the dialog.
+	 * @param modalType The modality type for the dialog. Of primary
+	 *        interest are {@link ModalityType#APPLICATION_MODAL}, which
+	 *        prevents any interaction with the rest of the application,
+	 *        and {@link ModalityType#MODELESS}, which does not block any
+	 *        other application components.
 	 * @return True if the 'Save' option was selected.
 	 */
 	public static final boolean showSaveDialog(Object form, boolean resizable, ModalityType modalType){
@@ -124,7 +129,12 @@ public class Dialog{
 	/**
 	 * Shows the given object to the user in a dialog.
 	 * @param msg The object to display.
-	 * @param resizable Whether the user should be able to resize the dialog
+	 * @param resizable Whether the user should be able to resize the dialog.
+	 * @param modalType The modality type for the dialog. Of primary
+	 *        interest are {@link ModalityType#APPLICATION_MODAL}, which
+	 *        prevents any interaction with the rest of the application,
+	 *        and {@link ModalityType#MODELESS}, which does not block any
+	 *        other application components.
 	 */
 	public static final void showMessageDialog(Object msg, boolean resizable, ModalityType modalType){
 		showDialog(msg, resizable, modalType, new String[]{"OK"});
@@ -153,6 +163,11 @@ public class Dialog{
 	 * Shows the given object as a dialog with the given close options.
 	 * @param form The dialog to display.
 	 * @param resizable Whether or not the dialog can be resized.
+	 * @param modalType The modality type for the dialog. Of primary
+	 *        interest are {@link ModalityType#APPLICATION_MODAL}, which
+	 *        prevents any interaction with the rest of the application,
+	 *        and {@link ModalityType#MODELESS}, which does not block any
+	 *        other application components.
 	 * @param options The close options for the dialog.
 	 * @return The index of the option that was chosen in the options array
 	 *         or -1 if the dialog window was closed.
@@ -171,7 +186,19 @@ public class Dialog{
 		return -1;
 	}
 	
-	//non blocking need to call setvisible false to close
+	/**
+	 * Shows a dialog with the given content and immediately returns without waiting
+	 * for the user to close the presented dialog. The dialog should be closed manually
+	 * by calling {@link JDialog#setVisible(boolean)} on the returned dialog.
+	 * @param form The content of the dialog.
+	 * @param resizable Whether the user should be able to resize the dialog.
+	 * @param modalType The modality type for the dialog. Of primary
+	 *        interest are {@link ModalityType#APPLICATION_MODAL}, which
+	 *        prevents any interaction with the rest of the application,
+	 *        and {@link ModalityType#MODELESS}, which does not block any
+	 *        other application components.
+	 * @return The dialog being presented to the user.
+	 */
 	public static final JDialog showDialog(Object form, boolean resizable, ModalityType modalType){
 		JOptionPane pane = new JOptionPane(form);
 		pane.setOptions(new Object[]{});
@@ -180,6 +207,17 @@ public class Dialog{
 		return dialog;
 	}
 	
+	/**
+	 * Builds a new dialog with the given content pane and settings.
+	 * @param pane The content for the dialog.
+	 * @param resizable Whether the user should be able to resize the dialog.
+	 * @param modalType The modality type for the dialog. Of primary
+	 *        interest are {@link ModalityType#APPLICATION_MODAL}, which
+	 *        prevents any interaction with the rest of the application,
+	 *        and {@link ModalityType#MODELESS}, which does not block any
+	 *        other application components.
+	 * @return The constructed dialog.
+	 */
 	private static final JDialog buildDialog(JOptionPane pane, boolean resizable, ModalityType modalType){
 		pane.setActionMap(new ActionMap());
 		JDialog dialog = pane.createDialog(getParentFrame(), title);
