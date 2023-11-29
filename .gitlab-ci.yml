@@ -1,13 +1,13 @@
 image: openjdk:8
 
 variables:
-  PROJECTNAME: "Util"
-  VERSION: ${CI_COMMIT_REF_NAME}
+  NAME: "${CI_PROJECT_NAME}-${CI_PIPELINE_ID}-${CI_COMMIT_REF_NAME}"
+  PROJECTNAME: Util
 
 before_script:
   - java -version
-  - ls -l
   - cd ${PROJECTNAME}
+  - ls -l
   - chmod -R 755 ./*
 
 stages:
@@ -21,6 +21,18 @@ endings:
   allow_failure: true
   script: curl ${SERVER}ci/lf.sh | bash
   stage: check
+
+spotbugs:
+  allow_failure: true
+  script:
+    - ./gradlew -PnexusPublic=${NEXUS_PUBLIC} :spotbugsMain
+  stage: check
+  artifacts:
+    name: "SpotBugs Report"
+    expire_in: 1 week
+    when: always
+    paths:
+      - ${PROJECTNAME}/build/reports/spotbugs/main/spotbugs.html
 
 pending:
   allow_failure: true
@@ -46,33 +58,31 @@ verify:
   coverage: '/\([0-9]{2,3}\.[0-9]{2}%\)/'
 
 javadoc:
-  script:
-    - mkdir ../javadoc
-    - ./gradlew javadoc
-    - mv ./build/docs/javadoc/* ../javadoc
+  script: curl ${SERVER}ci/documentation.sh | bash
   stage: javadoc
   artifacts:
-    name: "$PROJECTNAME"
+    name: "${NAME} [Javadoc]"
     expire_in: 1 week
     paths:
       - javadoc/
 
 compile:
   script:
-    - ./gradlew jar
-    - mv ./build/libs/* ../
+    - ./gradlew -PnexusPublic=${NEXUS_PUBLIC} :jar
+    - mv ./build/libs/*.jar ../${PROJECTNAME}.jar
   stage: compile
   artifacts:
-    name: "${PROJECTNAME}"
+    name: "${NAME}"
     expire_in: 1 week
     paths:
-      - ${PROJECTNAME}-*.jar
-      
+      - ${PROJECTNAME}.jar
+
 publish:
   script:
-    - ./gradlew publishAllPublicationsToMavenRepository
-  only: 
+    - ./gradlew -PreleaseVersion=${CI_COMMIT_REF_NAME:1} publishAllPublicationsToMavenRepository
+  only:
     - tags
   when: manual
   allow_failure: false
   stage: publishing
+

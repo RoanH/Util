@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -154,9 +155,11 @@ public class Util{
 			con.addRequestProperty("Accept", "application/vnd.github.v3+json");
 			con.setConnectTimeout(10000);
 			
-			try(BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()))){
+			try(BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8))){
 				String line = reader.readLine();
-				reader.close();
+				if(line == null){
+					return null;
+				}
 				
 				String[] versions = line.split("\"name\":\"v");
 				int major = 1;
@@ -174,6 +177,8 @@ public class Util{
 				}
 				return "v" + major + "." + minor;
 			}
+		}catch(RuntimeException e){
+			throw e;
 		}catch(Exception e){
 			return null;
 			//No Internet access or something else is wrong,
@@ -219,6 +224,8 @@ public class Util{
 			}
 			
 			return null;
+		}catch(RuntimeException e){
+			throw e;
 		}catch(Exception e){
 			return null;
 		}
