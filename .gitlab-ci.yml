@@ -79,7 +79,7 @@ compile:
 
 publish:
   script:
-    - ./gradlew publishAllPublicationsToMavenRepository
+    - ./gradlew -PreleaseVersion=${CI_COMMIT_REF_NAME:1} publishAllPublicationsToMavenRepository
   only:
     - tags
   when: manual
