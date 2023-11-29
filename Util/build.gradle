@@ -47,12 +47,17 @@ spotbugsMain{
 	}
 }
 
+java{
+	withSourcesJar()
+	withJavadocJar()
+}
+
 group = 'dev.roanh.util'
 version = project.hasProperty("releaseVersion") ? releaseVersion : 'SNAPSHOT'
 
 publishing{
 	publications{
-		nexus(MavenPublication){
+		mavenJava(MavenPublication){
 			from components.java
 			artifactId = 'util'
 
@@ -94,9 +99,9 @@ publishing{
 }
 
 jar{
-	into("META-INF/maven/$project.group/$project.publishing.publications.nexus.artifactId"){
+	into("META-INF/maven/$project.group/$project.publishing.publications.mavenJava.artifactId"){
 		from{
-			generatePomFileForNexusPublication
+			generatePomFileForMavenJavaPublication
 		}
 		rename ".*", "pom.xml"
 	}
