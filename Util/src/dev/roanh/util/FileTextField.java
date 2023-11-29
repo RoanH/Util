@@ -48,7 +48,7 @@ public class FileTextField extends JTextField implements DropTargetListener, Doc
 	/**
 	 * Consumer that gets notified when the selected folder or file changes.
 	 */
-	private FileChangeListener listener;
+	private transient FileChangeListener listener;
 
 	/**
 	 * Constructs a new file text field.

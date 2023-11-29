@@ -168,11 +168,16 @@ public class FileSelector{
 			chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 			while(chooser.showSaveDialog(Dialog.getParentFrame()) == JFileChooser.APPROVE_OPTION){
 				Path file = chooser.getSelectedFile().toPath();
-				if(!file.getFileName().toString().toLowerCase(Locale.ROOT).endsWith(extension)){
-					file = file.resolveSibling(file.getFileName().toString() + extension);
+				Path fileName = file.getFileName();
+				if(fileName == null){
+					continue;
 				}
 				
-				if(Files.exists(file) && !Dialog.showConfirmDialog(file.getFileName().toString() + " already exists.\nDo you want to replace it?")){
+				if(!fileName.toString().toLowerCase(Locale.ROOT).endsWith(extension)){
+					file = file.resolveSibling(fileName.toString() + extension);
+				}
+				
+				if(Files.exists(file) && !Dialog.showConfirmDialog(fileName.toString() + " already exists.\nDo you want to replace it?")){
 					continue;
 				}
 

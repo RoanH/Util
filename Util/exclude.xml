@@ -8,7 +8,14 @@
       <Bug pattern="EI_EXPOSE_REP2"/>
       <Bug pattern="MS_CANNOT_BE_FINAL"/>
       <Bug pattern="MS_PKGPROTECT"/>
+      <Bug pattern="MS_EXPOSE_REP"/>
+      <Bug pattern="EI_EXPOSE_STATIC_REP2"/>
     </Or>
+  </Match>
+  
+  <Match>
+    <Bug pattern="DM_EXIT"/>
+    <Class name="dev.roanh.util.ExclamationMarkPath"/>
   </Match>
 
 </FindBugsFilter>
