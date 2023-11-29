@@ -106,6 +106,7 @@ jar{
 		rename ".*", "pom.xml"
 	}
 }
+
 signing{
 	useInMemoryPgpKeys(findProperty("signingKeyId"), findProperty("signingKey"), findProperty("signingPassword"))
 	sign publishing.publications.mavenJava
