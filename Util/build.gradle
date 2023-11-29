@@ -64,7 +64,7 @@ publishing{
 			pom{
 				name = project.eclipse.project.name
 				description = 'Utilities library for public projects'
-				url = 'https://git.roanh.dev/roan/util'
+				url = 'https://github.com/RoanH/Util'
 				licenses{
 					license{
 						name = 'GNU General Public License v3.0'
@@ -79,9 +79,9 @@ publishing{
 					}
 				}
 				scm{
-					connection = 'scm:git:git@git.roanh.dev:roan/util.git'
+					connection = 'scm:git:git@github.com/RoanHUtil.git'
 					developerConnection = 'scm:git:git@git.roanh.dev:roan/util.git'
-					url = 'https://git.roanh.dev/roan/util'
+					url = 'https://github.com/RoanH/Util'
 				}
 			}
 		}
