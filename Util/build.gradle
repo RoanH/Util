@@ -10,11 +10,11 @@ sourceSets{
 	main{
 		java{
 			srcDirs = ['src']
-			exclude '**/*.dll'
+			//exclude '**/*.dll'
 		}
 		resources{
-			srcDirs = ['src']
-			exclude '**/*.java'
+			srcDirs = ['resources']
+			//exclude '**/*.java'
 		}
 	}
 }
