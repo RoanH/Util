@@ -79,7 +79,7 @@ publishing{
 					}
 				}
 				scm{
-					connection = 'scm:git:git@github.com/RoanHUtil.git'
+					connection = 'scm:git:git@github.com:RoanH/Util.git'
 					developerConnection = 'scm:git:git@git.roanh.dev:roan/util.git'
 					url = 'https://github.com/RoanH/Util'
 				}
