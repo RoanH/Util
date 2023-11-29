@@ -173,7 +173,9 @@ public class Dialog{
 	
 	//non blocking need to call setvisible false to close
 	public static final JDialog showDialog(Object form, boolean resizable, ModalityType modalType){
-		JDialog dialog = buildDialog(new JOptionPane(form), resizable, modalType);
+		JOptionPane pane = new JOptionPane(form);
+		pane.setOptions(new Object[]{});
+		JDialog dialog = buildDialog(pane, resizable, modalType);
 		SwingUtilities.invokeLater(()->dialog.setVisible(true));
 		return dialog;
 	}
