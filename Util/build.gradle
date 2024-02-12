@@ -1,8 +1,8 @@
 plugins{
+	id 'eclipse'
 	id 'java-library'
 	id 'maven-publish'
 	id 'signing'
-	id 'eclipse'
 	id 'com.github.spotbugs' version '5.0.14'
 }
 
@@ -21,7 +21,12 @@ repositories{
 			url "$nexusPublic"
 		}
 	}
-	mavenCentral();
+	mavenCentral()
+}
+
+version = findProperty("refName") ?: 'SNAPSHOT'
+if(version.matches("v\\d+\\.\\d+")){
+	version = version.substring(1)
 }
 
 eclipse.classpath.downloadSources = true
@@ -29,15 +34,17 @@ eclipse.classpath.downloadJavadoc = true
 compileJava.options.encoding = 'UTF-8'
 sourceCompatibility = 1.8
 javadoc.options.memberLevel = JavadocMemberLevel.PRIVATE
+group = 'dev.roanh.util'
+ext.artifact = 'util'
 
 spotbugs{
 	showProgress = true
 	effort = 'max'
 	reportLevel = 'low'
-	excludeFilter = file("exclude.xml")
+	excludeFilter = file("$rootDir/exclude.xml")
 }
 
-spotbugsMain{
+tasks.withType(com.github.spotbugs.snom.SpotBugsTask){
 	reports{
 		html{
 			required = true
@@ -52,14 +59,11 @@ java{
 	withJavadocJar()
 }
 
-group = 'dev.roanh.util'
-version = project.hasProperty("releaseVersion") ? releaseVersion : 'SNAPSHOT'
-
 publishing{
 	publications{
 		mavenJava(MavenPublication){
 			from components.java
-			artifactId = 'util'
+			artifactId = project.artifact
 
 			pom{
 				name = project.eclipse.project.name
@@ -99,7 +103,7 @@ publishing{
 }
 
 jar{
-	into("META-INF/maven/$project.group/$project.publishing.publications.mavenJava.artifactId"){
+	into("META-INF/maven/$project.group/$project.artifact"){
 		from{
 			generatePomFileForMavenJavaPublication
 		}
