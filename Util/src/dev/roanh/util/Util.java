@@ -39,7 +39,7 @@ import org.w3c.dom.NodeList;
  * Class with various utility subroutines.
  * @author Roan
  */
-public class Util{
+public final class Util{
 	/**
 	 * The current Util version as a string without the 'v' prefix.
 	 * If Util is built locally and not included as a release artifact
@@ -56,6 +56,12 @@ public class Util{
 	 * @see #VERSION_FORMAT_ITALICS
 	 */
 	private static final String VERSION_FORMAT = "<html><center>Version: %1$s, latest version: %2$s</center></html>";
+	
+	/**
+	 * Prevent instantiation.
+	 */
+	private Util(){
+	}
 	
 	/**
 	 * Gets a version label that automatically updates
@@ -177,8 +183,6 @@ public class Util{
 				}
 				return "v" + major + "." + minor;
 			}
-		}catch(RuntimeException e){
-			throw e;
 		}catch(Exception e){
 			return null;
 			//No Internet access or something else is wrong,
@@ -193,7 +197,7 @@ public class Util{
 	public static final void installUI(){
 		try{
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		}catch(Throwable ignore){
+		}catch(Exception ignore){
 		}
 	}
 	
@@ -224,8 +228,6 @@ public class Util{
 			}
 			
 			return null;
-		}catch(RuntimeException e){
-			throw e;
 		}catch(Exception e){
 			return null;
 		}
