@@ -55,13 +55,19 @@ import java.security.CodeSource;
  * @see <a href="https://bugs.openjdk.java.net/browse/JDK-7188320">JDK Bug 7188320</a>
  * @see java.net.JarURLConnection
  */
-public class ExclamationMarkPath{
+public final class ExclamationMarkPath{
 	/**
 	 * Current location of the program executable.
 	 * <p>
 	 * Set by {@link #check()}
 	 */
 	private static File exe;
+	
+	/**
+	 * Prevent instantiation.
+	 */
+	private ExclamationMarkPath(){
+	}
 	
 	/**
 	 * Checks if the current location of the program is
@@ -239,7 +245,7 @@ public class ExclamationMarkPath{
 	private static final boolean verifyPath(File file){
 		if(file == null){
 			return false;
-		}if(file.isFile()){
+		}else if(file.isFile()){
 			return verifyPath(file.getParentFile());
 		}else{
 			if(file.getName().endsWith("!")){

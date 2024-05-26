@@ -152,7 +152,7 @@ public class FileTextField extends JTextField implements DropTargetListener, Doc
 				dtde.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
 				@SuppressWarnings("unchecked")
 				List<File> files = (List<File>)dtde.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
-				if(files.size() > 0){
+				if(!files.isEmpty()){
 					this.setText(files.get(0).getAbsolutePath());
 				}
 			}catch(UnsupportedFlavorException | IOException ignore){

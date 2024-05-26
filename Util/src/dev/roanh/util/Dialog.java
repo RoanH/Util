@@ -27,6 +27,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 
 import dev.roanh.util.FileSelector.FileExtension;
 
@@ -35,7 +36,7 @@ import dev.roanh.util.FileSelector.FileExtension;
  * used dialog windows.
  * @author Roan
  */
-public class Dialog{
+public final class Dialog{
 	/**
 	 * The parent frame for dialog windows.
 	 */
@@ -48,6 +49,12 @@ public class Dialog{
 	 * The window title for dialog windows.
 	 */
 	private static String title = "";
+	
+	/**
+	 * Prevent instantiation.
+	 */
+	private Dialog(){
+	}
 	
 	/**
 	 * Sets the parent window for the dialog windows.
@@ -224,7 +231,7 @@ public class Dialog{
 		dialog.setResizable(resizable);
 		dialog.setIconImage(icon);
 		dialog.setModalityType(modalType);
-		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		dialog.pack();
 		return dialog;
 	}

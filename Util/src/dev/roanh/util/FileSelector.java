@@ -41,7 +41,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  * @author Roan
  * @see JFileChooser
  */
-public class FileSelector{
+public final class FileSelector{
 	/**
 	 * True if the native library
 	 * is loaded.
@@ -52,6 +52,12 @@ public class FileSelector{
 	 * native library is loaded.
 	 */
 	private static JFileChooser chooser = null;
+	
+	/**
+	 * Prevent instantiation.
+	 */
+	private FileSelector(){
+	}
 	
 	/**
 	 * Opens a file open dialog.
@@ -313,13 +319,10 @@ public class FileSelector{
 							}
 						}
 						
-						try{
-							System.load(tmp.toAbsolutePath().toString());
-							initialised = true;
-						}catch(UnsatisfiedLinkError ignore){
-						}
+						System.load(tmp.toAbsolutePath().toString());
+						initialised = true;
 					}
-				}catch(IOException ignore){
+				}catch(IOException | UnsatisfiedLinkError ignore){
 				}				
 			}
 		}
