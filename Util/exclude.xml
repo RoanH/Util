@@ -26,10 +26,10 @@
   </Match>
   
   <Match>
-	<!-- Intentional -->
-	<Bug pattern="DE_MIGHT_IGNORE"/>
-	<Class name="dev.roanh.util.Util"/>
-	<Method name="installUI"/>
+    <!-- Intentional -->
+    <Bug pattern="DE_MIGHT_IGNORE"/>
+    <Class name="dev.roanh.util.Util"/>
+    <Method name="installUI"/>
   </Match>
 
 </FindBugsFilter>
